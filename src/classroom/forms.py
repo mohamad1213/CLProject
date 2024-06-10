@@ -13,10 +13,10 @@ class JoinClassroomForm(forms.Form):
 class PostForm(forms.Form):
     title = forms.CharField()
     description = forms.CharField(widget=forms.Textarea)
-    file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))
 
 class AssignmentFileForm(forms.Form):
-    file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))
 
 class AssignmentCreateForm(forms.Form):
     def __init__(self,user,*args, **kwargs):
@@ -34,4 +34,4 @@ class AssignmentCreateForm(forms.Form):
     topics = forms.ChoiceField()
     points = forms.IntegerField(min_value=0,max_value =100)
     due_date = forms.DateTimeField()
-    file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True})) 
+    file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True})) 

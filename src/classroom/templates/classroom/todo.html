@@ -5,49 +5,43 @@
 {% block title %} Home {% endblock title %}
 
 {% block content %}
-<div class="container">
-    <ul class="navbar-nav" id="accordionExample">
-        <li class="nav-item">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                All Classes
-                </button>
-                <!-- <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">All Classes</a>
-                    <div class="collapse-divider"><hr></div>
-                    <a class="dropdown-item" href="#">BCE</a>
-                </div> -->
-        </li>
-        <li class="nav-item mt-4">
-            <h5 class="mb-0">
-                <a class="nav-link toggle" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapsePages">
-                    <div class="row ">
-                        <p class="text-dark ml-4">Due</p>
-                        <p class="ml-auto text-dark">{{ assignments|length }}</p>
-                    </div>
-                </a>
-            </h5>
-            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                {% for assignment in assignments %}
-                <a href="{% url 'classroom:assignment_submit' assignment.pk %}" class="card bg-transparent border-light p-1 text-decoration-none">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                    <h4 class="text-primary font-weight-bold">{{ assignment.title }}</h4>
-                            </div>
-                            <div class="col-lg-12">
-                                <p class="text-dark float-left">{{ assignment.topic.classroom.name }}</p>
-                                <p class="text-dark font-weight-bold float-right">Posted {{ assignment.created_at }} <br> Due on {{ assignment.due_date }}</p>
-                            </div>
-                                     
-                        </div>
-                    </div>
-                </a>
-                <hr>
+<h1 class="h3 mb-2 text-gray-800">Tugas</h1>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Judul</th>
+                        <th>Topic</th>
+                        <th>Tanggal buat</th>
+                        <th>Tenggat Waktu</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                {% for u in assignments %}
+                <tbody>
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{u.title}}</td>
+                        <td>{{ u.topic.classroom.name }}</td>
+                        <td>{{ u.created_at }}</td>
+                        <td>{{ u.due_date }}</td>
+                        <td>
+                            <a href="{% url 'classroom:assignment_submit' u.pk %}" type="button"
+                                class="btn btn-primary"> <i class="fas fa-eye"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
                 {% endfor %}
-                
-            </div>
-        </li>        
-    </ul>
+            </table>
+        </div>
+    </div>
 </div>
-
+</div>
 {% endblock content %}

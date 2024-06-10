@@ -3,17 +3,27 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from .models import User,Profile
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import Group
+
+
 
 
 def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            user = User.objects.filter(username=username).first()
+            user = form.save()
+            role = request.POST.get('role')
+            if role == 'siswa':
+                group = Group.objects.get(name='siswa')
+            elif role == 'guru':
+                group = Group.objects.get(name='guru')
+            else:
+                group = None  # Atau sesuaikan dengan logika bisnis Anda
+            user.groups.add(group)
             Profile.objects.create(user=user)
-            messages.success(request, f'Account Created Successfully for {username}')
+            messages.success(request, f'Account Created Successfully for {user.username}')
             return redirect('users:login')
         else:
             messages.success(request, f'Error Setting up the account')
@@ -46,4 +56,9 @@ def profile(request):
         'profile_form': profile_form,
     }
     return render(request, 'users/profile.html', context)
+
+def logoutUser(request):
+	logout(request)
+	return redirect('users:login')
+
 

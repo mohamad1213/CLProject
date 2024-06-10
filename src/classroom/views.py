@@ -15,13 +15,27 @@ def home(requests):
     classrooms = set(requests.user.classroom_set.all()).union(teaching_classes)
     classroom_form = ClassroomCreationForm()
     join_classroom_form = JoinClassroomForm()
+    
     context = {
         'classrooms' : classrooms,
         'classroom_form': classroom_form,
         'join_classroom_form':join_classroom_form
     }
     return render(requests, 'classroom/home.html', context)
-
+@login_required
+def dashboard(requests):
+    is_guru = requests.user.groups.filter(name='guru').exists()
+    teaching_classes = set([classroom.classroom for classroom in requests.user.classroomteachers_set.all()])
+    classrooms = set(requests.user.classroom_set.all()).union(teaching_classes)
+    classroom_form = ClassroomCreationForm()
+    join_classroom_form = JoinClassroomForm()
+    context = {
+        'classrooms' : classrooms,
+        'classroom_form': classroom_form,
+        'join_classroom_form':join_classroom_form,
+        'is_guru':is_guru
+    }
+    return render(requests, 'classroom/beranda.html', context)
 @login_required
 def create_classroom(request):
     if request.method == 'POST':
@@ -218,6 +232,7 @@ def todo(request):
 
 @login_required
 def toreview(request):
+    is_guru = request.user.groups.filter(name='guru').exists()
     classrooms = request.user.classroomteachers_set.all()
     classrooms = list(map(lambda x: x.classroom, classrooms))
     topics = []
@@ -226,7 +241,7 @@ def toreview(request):
     assignments = []
     for topic in topics:
         assignments.extend(topic.assignment_set.all())
-    context = {'assignments': reversed(assignments)}
+    context = {'assignments': reversed(assignments),'is_guru':is_guru}
     return render(request, 'classroom/toreview.html', context)
 
 

@@ -8,4 +8,4 @@ def subscribe(request):
         form = SubscribeForm(request.POST)
         if form.is_valid():
             subscriber = Subscriber.objects.create(email=form.cleaned_data.get('email'))
-            return redirect('landing-page')
+            return redirect('dashboard')

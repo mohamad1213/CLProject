@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
+    'crispy_bootstrap4',
     'classroom',
     'posts',
     'users',
@@ -50,7 +52,6 @@ INSTALLED_APPS = [
     'newsletter',
     'contactus',
     'crispy_forms',
-    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -136,7 +137,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
@@ -145,8 +146,7 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_URL = 'users:login'
-LOGIN_REDIRECT_URL = 'classroom:home'
-LOGOUT_REDIRECT_URL = 'landing-page'
+LOGIN_REDIRECT_URL = 'classroom:dashboard'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -156,3 +156,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'stationeymanagerkjsieit@gmail.com'
 EMAIL_HOST_PASSWORD = 'hytrniyakdtuwgyh'
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField' 

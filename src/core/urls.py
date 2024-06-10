@@ -27,8 +27,8 @@ from . import views
 urlpatterns = [
     path('comments', include('comments.urls')),
     path('admin/', admin.site.urls),
-    path('classroom/',include('classroom.urls')),
-    path('', views.landing, name='landing-page'),
+    path('',include('classroom.urls')),
+    # path('', views.landing, name='landing-page'),
     path('users/', include('users.urls')),
     path('courses/', include('courses.urls')),
     path('posts/', include('posts.urls')),
@@ -37,6 +37,7 @@ urlpatterns = [
     path('ide/', include('ide.urls')),
     path('newsletter/', include('newsletter.urls')),
     path('contactus/', include('contactus.urls')),
+    path('accounts/', include('users.urls'), name='accounts'),
     path('password-reset/', 
     auth_views.PasswordResetView.as_view(
         template_name = 'users/password_reset.html'),

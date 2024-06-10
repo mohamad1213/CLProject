@@ -1,7 +1,10 @@
 from django.forms import ModelForm
 from django import forms
 from  .models import Classroom,Topic
-
+from posts.models import Post
+from django.db import models
+from ckeditor.fields import RichTextField
+from ckeditor.widgets import CKEditorWidget
 class ClassroomCreationForm(ModelForm):
     class Meta:
         model = Classroom
@@ -12,8 +15,13 @@ class JoinClassroomForm(forms.Form):
 
 class PostForm(forms.Form):
     title = forms.CharField()
-    description = forms.CharField(widget=forms.Textarea)
+    description = forms.CharField(widget=CKEditorWidget())
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))
+    # widgets = {
+    #         'title': forms.TextInput({'class': 'form-control', 'type':'number', 'style':'padding:6px 10px ;border: 1px solid #ced4da'}),
+    #         # 'description': forms.TextInput({'class': 'form-control', 'type':'number', 'style':'padding:6px 10px ;border: 1px solid #ced4da'}),
+    #         'file_field': forms.TextInput({ 'class': 'form-control' , 'type':'text','style':'padding:6px 10px ;border: 1px solid #ced4da','readonly':'readonly'}),
+    # }
 
 class AssignmentFileForm(forms.Form):
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))

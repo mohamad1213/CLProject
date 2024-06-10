@@ -26,8 +26,7 @@ SECRET_KEY = '@d963vhv%0@yi4$dfd5qp8h55x$zevqwcxqhwd7fv+hh8-#xfe'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*', '.vercel.app']
 
 # Application definition
 
@@ -40,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'crispy_bootstrap4',
+    'ckeditor',
+    'ckeditor_uploader',
     'classroom',
     'posts',
     'users',
@@ -129,8 +130,15 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+    },
+}
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

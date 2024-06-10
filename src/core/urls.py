@@ -37,6 +37,7 @@ urlpatterns = [
     path('ide/', include('ide.urls')),
     path('newsletter/', include('newsletter.urls')),
     path('contactus/', include('contactus.urls')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
     path('accounts/', include('users.urls'), name='accounts'),
     path('password-reset/', 
     auth_views.PasswordResetView.as_view(

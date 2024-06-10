@@ -83,7 +83,6 @@ def open_classroom(requests,pk):
         contents.extend(list(topic.assignment_set.all()))
     
     contents.sort(key = lambda x: x.created_at)
-
     post_form = PostForm()
     comment_form = CommentCreateForm()
 

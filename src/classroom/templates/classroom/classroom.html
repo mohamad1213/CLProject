@@ -6,6 +6,8 @@
 
 
 {% block content %}
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
 <!-- ROW -->
 <div class="row">
     <div class="col-12 ">
@@ -44,16 +46,17 @@
                         <!-- TEXT AREA -->
                         <div id = "post-textarea" class="card shadow-sm d-none">
                             <div class="card-body">
+                                {{ form.media }}
                                 <form action="{% url 'posts:create_post' classroom.pk %}" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-group">
                                         {{ post_form.title|attr:"class:form-control"|attr:"placeholder:Title"}}
                                     </div>
                                     <div class="form-group">
-                                        {{ post_form.description|attr:"class:form-control"|attr:"placeholder:Description" }}
+                                            {{ post_form.description|attr:"class:form-control"|attr:"placeholder:Description" }}
                                     </div>
-                                    <div class="float-left">
-                                        {{ post_form.file_field|attr:"class:form-control btn btn-circle" }}
+                                    <div class="form-group">
+                                        {{ post_form.file_field|attr:"class:form-control" }}
                                     </div>
                                     <button type = "submit" class="btn btn-sm btn-primary m-1 pl-3 pr-3 float-right">
                                         Post
@@ -155,7 +158,13 @@
         </div>
         </div>
     </div>
-    </div>
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#editor' ) )
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
     <!-- ROW END -->
 
 {% endblock content %}

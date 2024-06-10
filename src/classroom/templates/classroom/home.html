@@ -6,16 +6,19 @@
 {% block content %}
 <!-- Page Heading -->
 <h1 class="h3 mb-4 text-gray-800">Classrooms</h1>
-{% if is_guru %}
+{% for u in request.user.groups.all %}
+{% if u.name == 'guru' %}
 <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"data-toggle="modal" data-target="#exampleModalCenter" href="#">
     Create Classroom
 </a>
 <div class="dropdown-divider"></div>
-{% endif %}
+{% elif u.name == 'siswa' %}
 <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm h1"data-toggle="modal" data-target="#exampleModal" href="#">
     <h5 class="text-center rounded">Join Classroom</h5>
-</a>
-<!-- ROW  -->
+    </a>
+{% endif %}
+{% endfor %}
+    <!-- ROW  -->
 <div class="row">
     <!-- COL -->
     {% for classroom in classrooms %}

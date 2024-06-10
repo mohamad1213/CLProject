@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'vendor/assets/extensions/simple-datatables/style.css' %}">
+
+
+<link rel="stylesheet" href="{% static 'vendor/assets/compiled/css/table-datatable.css' %}">
+{% endblock css %}
+<header class="mb-3">
+    <a href="#" class="burger-btn d-block d-xl-none">
+        <i class="bi bi-justify fs-3"></i>
+    </a>
+</header>
+<div class="page-heading">
+    <h3>Manajemen Kelas</h3>
+</div>
+<div class="page-content">
+    <div class="page-heading">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-12 col-md-6 order-md-1 order-last">
+                    <p class="text-subtitle text-muted">A sortable, searchable, paginated table without
+                        dependencies thanks to simple-datatables.</p>
+                </div>
+                <div class="col-12 col-md-6 order-md-2 order-first">
+                    <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Kelas</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <section class="section">
+            <div class="card">
+                <div class="card-header" style="text-align: right;">
+                    <!-- Button trigger modal -->
+                    <a type="button" href="{% url 'classroom:assignment_create' %}" class="btn btn-primary">
+                        Tambah Tugas
+                    </a>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="table1">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Judul</th>
+                                <th>Description</th>
+                                <th>Guru</th>
+                                <th>Topic</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in assignment %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{u.title}}k</td>
+                                <td>{{u.description}}</td>
+                                <td>{{u.created_by}}</td>
+                                <td>{{u.topic}}</td>
+                                <td>{{u.due_date}}</td>
+                                <td>
+                                    {% if is_turnedin %}
+                                    <span class="badge bg-success">Completed</span>
+                                    {% else %}
+                                    <span class="badge bg-warning">On Progress</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#updateModal-{{u.id}}">
+                                        update
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#delete-{{u.id}}">
+                                        update
+                                    </button>
+                                    <a href="">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block js %}
+<script src="{% static 'vendor/assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'vendor/assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock js %}

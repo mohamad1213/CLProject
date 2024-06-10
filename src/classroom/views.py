@@ -111,6 +111,11 @@ def members(request, pk):
         'students': classroom.users.all(),
     }
     return render(request, 'classroom/members.html', context)
+@login_required
+def assignment(request):
+    assignment = Assignment.objects.all()
+    context = {'assignment':assignment}
+    return render(request, 'classroom/assigments.html', context)
 
 @login_required
 def assignment_create(request):

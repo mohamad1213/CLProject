@@ -3,12 +3,14 @@ import os
 from django.db import models
 from django.contrib.auth.models import User 
 from django.utils import timezone
+from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 from classroom.models import Topic
 
 class Post(models.Model):
     title = models.CharField(max_length=250)
-    description = models.TextField()
+    description = RichTextUploadingField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)

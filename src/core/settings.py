@@ -53,7 +53,9 @@ INSTALLED_APPS = [
     'newsletter',
     'contactus',
     'crispy_forms',
+    'sweetify'
 ]
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -133,11 +135,19 @@ USE_TZ = True
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': 'full',
+        'toolbar': 'Full',
         'height': 300,
         'width': '100%',
     },
+    'awesome_ckeditor': {
+        'toolbar': 'Full',  # You can customize this to your needs
+        'height': 400,
+        'width': '100%',
+        'extraPlugins': 'codesnippet',  # Example of adding extra plugins
+        'codeSnippet_theme': 'monokai_sublime',  # Example of configuring a plugin
+    },
 }
+
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/

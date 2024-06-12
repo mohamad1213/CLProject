@@ -15,13 +15,16 @@ class JoinClassroomForm(forms.Form):
 
 class PostForm(forms.Form):
     title = forms.CharField()
-    description = forms.CharField(widget=CKEditorWidget())
+    description = forms.CharField(widget=forms.Textarea())
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))
-    # widgets = {
-    #         'title': forms.TextInput({'class': 'form-control', 'type':'number', 'style':'padding:6px 10px ;border: 1px solid #ced4da'}),
-    #         # 'description': forms.TextInput({'class': 'form-control', 'type':'number', 'style':'padding:6px 10px ;border: 1px solid #ced4da'}),
-    #         'file_field': forms.TextInput({ 'class': 'form-control' , 'type':'text','style':'padding:6px 10px ;border: 1px solid #ced4da','readonly':'readonly'}),
-    # }
+    # class Meta:
+    #     model = Post
+    #     fields = ['title','description']
+    widgets = {
+            'title': forms.TextInput({'class': 'form-control', 'type':'text', 'style':'padding:6px 10px ;border: 1px solid #ced4da'}),
+            'description': forms.TextInput({'class': 'form-control', 'type':'text', 'style':'padding:6px 10px ;border: 1px solid #ced4da', "id":"id_content"}),
+            'file_field': forms.FileInput({ 'class': 'form-control' , 'type':'text','style':'padding:6px 10px ;border: 1px solid #ced4da'}),
+    }
 
 class AssignmentFileForm(forms.Form):
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))

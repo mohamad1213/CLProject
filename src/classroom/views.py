@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from posts.models import Post
 
+import sweetify
 
 from .models import Classroom,Topic,ClassroomTeachers
 from posts.models import Assignment,SubmittedAssignment,AssignmentFile, Attachment
@@ -24,7 +26,6 @@ def home(requests):
     return render(requests, 'classroom/home.html', context)
 @login_required
 def dashboard(requests):
-    is_guru = requests.user.groups.filter(name='guru').exists()
     teaching_classes = set([classroom.classroom for classroom in requests.user.classroomteachers_set.all()])
     classrooms = set(requests.user.classroom_set.all()).union(teaching_classes)
     classroom_form = ClassroomCreationForm()
@@ -33,13 +34,11 @@ def dashboard(requests):
         'classrooms' : classrooms,
         'classroom_form': classroom_form,
         'join_classroom_form':join_classroom_form,
-        'is_guru':is_guru
     }
     return render(requests, 'classroom/beranda.html', context)
 @login_required
 def create_classroom(request):
     if request.method == 'POST':
-        print('fORM vaLID')
         form = ClassroomCreationForm(request.POST)
         if form.is_valid(): 
             name = form.cleaned_data.get('name')
@@ -52,9 +51,11 @@ def create_classroom(request):
             topic.save()
             classroom_teachers = ClassroomTeachers(classroom = classroom, teacher=request.user)
             classroom_teachers.save()
-            messages.success(request, f'Classroom {name} created !')
+            sweetify.success(request, f'Classroom {name} created !')
+            return redirect('/classroom/')
         else:
-            messages.danger(request, f'Classroom Could not be created :(')
+            sweetify.error(request, f'Classroom Could not be created :(')
+            sweetify.error(request, form.errors)
     return redirect('classroom:home')
 
 @login_required
@@ -66,15 +67,15 @@ def join_classroom(request):
             classroom = Classroom.objects.filter(classroom_code = form.cleaned_data.get('code')).first()
             if classroom:
                 request.user.classroom_set.add(classroom)
-                messages.success(request, f'You are added in {classroom.name}')
+                sweetify.success(request, f'You are added in {classroom.name}')
             else:
-                messages.success(request, f'Error adding you to the classroom')
+                sweetify.success(request, f'Error adding you to the classroom')
         else:
-            messages.success(request, f'Error adding you to the classroom')
+            sweetify.success(request, f'Error adding you to the classroom')
     return redirect('classroom:home')
 
 @login_required
-def open_classroom(requests,pk):
+def open_classroom(request,pk):
     classroom = get_object_or_404(Classroom,pk = pk)
     topics = classroom.topic_set.all()
     contents = []
@@ -93,8 +94,11 @@ def open_classroom(requests,pk):
         'comment_form': comment_form,
     }
 
-    return render(requests, 'classroom/classroom.html', context)
-
+    return render(request, 'classroom/classroom.html', context)
+@login_required
+def view_document(request, document_id):
+    document = Post.objects.get(id=document_id)
+    return render(request, 'classroom/classroom.html', {'document': document})
 @login_required
 def delete_classroom(requests):
     context = {
@@ -134,6 +138,9 @@ def assignment_create(request):
             files = request.FILES.getlist('file_field')
             for f in files:
                 Attachment.objects.create(assignment = assignment,files=f)
+            sweetify.success(request, f'Tugas berhasil dibuat')
+        else:
+            sweetify.error(request, f'Tugas gagal dibuat')
             return redirect('classroom:open_classroom', topic.classroom.pk)
 
     else:
@@ -232,11 +239,8 @@ def todo(request):
     return render(request, 'classroom/todo.html', context)
 
 
-
-
 @login_required
 def toreview(request):
-    is_guru = request.user.groups.filter(name='guru').exists()
     classrooms = request.user.classroomteachers_set.all()
     classrooms = list(map(lambda x: x.classroom, classrooms))
     topics = []
@@ -245,7 +249,7 @@ def toreview(request):
     assignments = []
     for topic in topics:
         assignments.extend(topic.assignment_set.all())
-    context = {'assignments': reversed(assignments),'is_guru':is_guru}
+    context = {'assignments': reversed(assignments)}
     return render(request, 'classroom/toreview.html', context)
 
 

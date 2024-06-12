@@ -4,6 +4,8 @@
 {% block title %} Home {% endblock title %}
 
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 <header class="mb-3">
     <a href="#" class="burger-btn d-block d-xl-none">
         <i class="bi bi-justify fs-3"></i>
@@ -35,14 +37,14 @@
                 <div class="card-header" style="text-align: right;">
                     {% for u in request.user.groups.all %}
                     {% if u.name == 'guru' %}
-                    <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal"
-                        data-target="#exampleModalCenter" href="#">
+                    <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalCenter" href="#">
                         Create Classroom
                     </a>
                     <div class="dropdown-divider"></div>
                     {% elif u.name == 'siswa' %}
-                    <a style="float: left;" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm h1" data-toggle="modal"
-                        data-target="#exampleModal" href="#">
+                    <a style="float: left;" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm h1" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal" href="#">
                         Join Classroom
                     </a>
                     {% endif %}
@@ -86,7 +88,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLongTitle">Create Class</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -95,14 +97,11 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="exampleInput">Class Name</label>
-                                        {{ classroom_form.name|attr:'class: form-control'|attr:'placeholder:Enter
-                                        Classname'
-                                        }}
+                                        {{ classroom_form.name|attr:'class: form-control'|attr:'placeholder:Enter Classname'}}
                                     </div>
                                     <div class="form-group">
                                         <label for="exam">Description</label>
-                                        {{ classroom_form.description|attr:'class: form-control'|attr:'placeholder:Enter
-                                        Description' }}
+                                        {{ classroom_form.description|attr:'class: form-control'|attr:'placeholder:Enter Description' }}
                                     </div>
                                 </div>
 
@@ -122,7 +121,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLongTitle">Join Class</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -131,9 +130,7 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="exampleInput">{{ join_classroom_form.code.label }}</label>
-                                        {{ join_classroom_form.code|attr:'class: form-control'|attr:'placeholder:Enter
-                                        Class
-                                        Code' }}
+                                        {{ join_classroom_form.code|attr:'class: form-control'|attr:'placeholder:Enter Class Code' }}
                                         <small id="Help" class="form-text text-muted">Ask your teacher for the class
                                             code,
                                             then enter it

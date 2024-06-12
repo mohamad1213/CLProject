@@ -8,11 +8,22 @@ from .forms import GradeStudentForm
 
 @login_required
 def view_grades(request,pk):
+    test = SubmittedAssignment.objects.all()
+    for u in test:
+        output = {
+            "assignment" : u.assignment,
+            "user" : u.user,
+            "turned_in" : u.turned_in,
+            "grade" : u.grade,
+            "is_reviewed" : u.is_reviewed,
+        }
+        print(output)
     assignment = get_object_or_404(Assignment,pk=pk)
     submitted_assignments = assignment.submittedassignment_set.all()
     context = {
         'submitted_assignments':submitted_assignments,
         'assignment':assignment,
+        'output':output,
     }
     return render(request, 'assignments/view_grades.html', context)
 

@@ -3,14 +3,17 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from posts.models import Post
-
+from django.utils import timezone
 import sweetify
 
 from .models import Classroom,Topic,ClassroomTeachers
 from posts.models import Assignment,SubmittedAssignment,AssignmentFile, Attachment
 from .forms import ClassroomCreationForm,JoinClassroomForm, PostForm, AssignmentFileForm, AssignmentCreateForm
 from comments.forms import CommentCreateForm, PrivateCommentForm
-
+import pytz
+now_utc = timezone.now()
+tz_indonesia = pytz.timezone('Asia/Jakarta')
+now_indonesia = now_utc.astimezone(tz_indonesia)
 @login_required
 def home(requests):
     teaching_classes = set([classroom.classroom for classroom in requests.user.classroomteachers_set.all()])
@@ -118,31 +121,46 @@ def members(request, pk):
 @login_required
 def assignment(request):
     assignment = Assignment.objects.all()
-    context = {'assignment':assignment}
-    return render(request, 'classroom/assigments.html', context)
+    completed_tasks_count = Assignment.objects.filter(status='completed', due_date__lte=now_indonesia).count()
 
+    # Hitung jumlah tugas yang masih dalam progress (status onprogress)
+    onprogress_tasks_count = Assignment.objects.filter(status=Assignment.onprogress, due_date__lte=now_indonesia).count()
+    print(f"Assignment {completed_tasks_count}: status={onprogress_tasks_count}")
+    context = {
+        'assignment':assignment,
+        'completed_tasks_count': completed_tasks_count,
+        'onprogress_tasks_count': onprogress_tasks_count,
+    }
+    return render(request, 'classroom/assigments.html', context)
 @login_required
 def assignment_create(request):
     if request.method == 'POST':
         form = AssignmentCreateForm(request.user, request.POST, request.FILES)
         if form.is_valid():
             topic = get_object_or_404(Topic, pk=int(form.cleaned_data['topics']))
+            due_date = form.cleaned_data['due_date']
+            if due_date > now_indonesia:
+                status = 'onprogress'
+            else:
+                status = 'completed'
+            
+            # status = Assignment.onprogress if form.cleaned_data['due_date'] > timezone.now() else Assignment.completed
             assignment = Assignment(
                 title = form.cleaned_data['title'],
                 description = form.cleaned_data['description'],
                 created_by = request.user,
                 topic = topic,
-                due_date = form.cleaned_data['due_date']
+                due_date = form.cleaned_data['due_date'],
+                status = status,
             )
             assignment.save()
             files = request.FILES.getlist('file_field')
             for f in files:
                 Attachment.objects.create(assignment = assignment,files=f)
             sweetify.success(request, f'Tugas berhasil dibuat')
-        else:
-            sweetify.error(request, f'Tugas gagal dibuat')
             return redirect('classroom:open_classroom', topic.classroom.pk)
-
+        else:
+            sweetify.error(request, f'Tugas gagal dibuat: {form.errors.as_text()}')
     else:
         form = AssignmentCreateForm(request.user)
     context = {'form':form}
@@ -153,14 +171,16 @@ def assignment_create(request):
 def assignment_submit(request, pk):
     if request.method=='POST':
         assignment = get_object_or_404(Assignment,pk=pk)
-        submitted_assignment = assignment.submittedassignment_set.filter(user = request.user).first()
+        submitted_assignment = assignment.submittedassignment_set.filter(user=request.user).first()
         if not submitted_assignment:
             submitted_assignment = SubmittedAssignment.objects.create(assignment = assignment, user = request.user)
         files = request.FILES.getlist('file_field')
         print(files)
         for f in files:
             AssignmentFile.objects.create(submitted_assignment = submitted_assignment,files=f)
-    
+
+        assignment.status = Assignment.completed
+        assignment.save()
     form = AssignmentFileForm()
     private_comment_form = PrivateCommentForm()
     assignment = get_object_or_404(Assignment, pk=pk)

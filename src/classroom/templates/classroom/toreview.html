@@ -4,61 +4,77 @@
 {% load crispy_forms_tags %}
 {% block title %} To Review {% endblock title %}
 
-{% block content %}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
-<!-- <div class="ml-lg-5 mr-lg-5">
-    <div class="d-flex flex-row bd-highlight mb-3">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
-        <div class="dropdown-menu">
-        <a class="dropdown-item" href="#">Action</a>
-        <a class="dropdown-item" href="#">Another action</a>
-        <a class="dropdown-item" href="#">Something else here</a>
-        <div role="separator" class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#">Separated link</a>
+{% block content %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<header class="mb-3">
+  <a href="#" class="burger-btn d-block d-xl-none">
+    <i class="bi bi-justify fs-3"></i>
+  </a>
+</header>
+<div class="page-heading">
+  <h3>Manajemen Review Tugas</h3>
+</div>
+<div class="page-content">
+  <div class="page-heading">
+    <div class="page-title">
+      <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-last">
+          <p class="text-subtitle text-muted">Mereview Tugas dan penelian pada siswa</p>
         </div>
-    </div>
-</div> -->
-<div class = "ml-lg-5 mr-lg-5">
-    <div class="accordion" id="accordionExample">
-      {% for assignment in assignments %}
-        <!-- CARD -->
-        <div class="card mb-2">
-          <div class="card-header" id="headingOne">
-            <h2 class="mb-0">
-              <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{ assignment.pk }}" aria-expanded="true" aria-controls="collapseOne">
-                {{ assignment.title }}
-              </button>
-            </h2>
-          </div>
-          <div id="collapse{{ assignment.pk }}" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-            <div class="card-body">
-               <small>Posted on {{ assignment.created_at }}</small>
-               <p>{{ assignment.description }}</p>
-               <div class = "d-flex flex-row-reverse">
-                    <div class="p-2 border-left border-secondary">
-                        <h1 class="text-dark">{{ assignment.total_turned_in  }}</h1>
-                        <br>
-                        <p>Turned in</p>
-                    </div>
-                    <div class="p-2 border-left border-secondary">
-                        <h1 class="text-dark">{{ assignment.total_missing }}</h1>
-                        <br>
-                        <p>Missing</p>
-                    </div>
-               </div>
-            <hr>
-            <div class="d-flex flex-row bd-highlight mb-3">
-                <a class = "p-2" href = "{% url 'classroom:assignment_submit' assignment.pk %}" >View Assignment</a>
-                <a class = "p-2" href = "{% url 'classroom:student_work' assignment.pk %}" >View Submissions</a>
-                <a class = "p-2" href = "{% url 'assignments:view_grades' assignment.pk %}" >View Grades</a>
-            </div>
-          </div>
+        <div class="col-12 col-md-6 order-md-2 order-first">
+          <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Kelas</li>
+            </ol>
+          </nav>
         </div>
       </div>
-      <!-- END CARD -->
-      {% endfor %}
+    </div>
+    <section class="section">
+      <div class="card">
+        <div class="card-body">
+          <table class="table table-striped table-bordered" id="studentsTable">
+            <thead>
+              <tr class="text-center">
+                <th>No</th>
+                <th>Judul</th>
+                <th>Tanggal Posting</th>
+                <th>Total Submit</th>
+                <th>Total Unsubmit</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for u in assignments %}
+              <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{u.title}}</td>
+                <td>{{u.created_at}}</td>
+                <td>{{u.total_turned_in}}</td>
+                <td>{{u.total_missing}}</td>
+                <td>
+                  <a type="button" class="btn btn-primary" href="{% url 'classroom:assignment_submit' u.pk %}"><small>Lihat Tugas</small></a>
+                  <a type="button" class="btn btn-primary" href="{% url 'classroom:student_work' u.pk %}"><small>List Tugas</small></a>
+                  <a type="button" class="btn btn-primary" href="{% url 'assignments:view_grades' u.pk %}"><small>Nilai</small></a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
-
-
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Link CDN DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#studentsTable').DataTable();
+        });
+    </script>
 {% endblock %}

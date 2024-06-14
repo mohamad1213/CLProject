@@ -32,13 +32,20 @@ class Post(models.Model):
 
 
 class Assignment(models.Model):
+    onprogress= 'onprogress'
+    completed= 'completed'
+    STATUS_CHOICES = [
+        (onprogress, 'On Progress'),
+        (completed, 'Completed'),
+    ]
     title = models.CharField(max_length=250)
     description = models.TextField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     due_date = models.DateTimeField()
-    marks = models.IntegerField(default=100)
+    status = models.CharField(max_length=10, blank=True, null=True, choices=STATUS_CHOICES, default=onprogress)
+    marks = models.IntegerField(default=100, blank=True, null=True)
 
     def __str__(self):
         return self.title

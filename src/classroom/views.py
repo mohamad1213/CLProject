@@ -140,9 +140,9 @@ def assignment_create(request):
             topic = get_object_or_404(Topic, pk=int(form.cleaned_data['topics']))
             due_date = form.cleaned_data['due_date']
             if due_date > now_indonesia:
-                status = 'onprogress'
+                status = Assignment.onprogress
             else:
-                status = 'completed'
+                status = Assignment.completed
             
             # status = Assignment.onprogress if form.cleaned_data['due_date'] > timezone.now() else Assignment.completed
             assignment = Assignment(

@@ -39,7 +39,7 @@ class Assignment(models.Model):
         (completed, 'Completed'),
     ]
     title = models.CharField(max_length=250)
-    description = models.TextField()
+    description = RichTextUploadingField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)

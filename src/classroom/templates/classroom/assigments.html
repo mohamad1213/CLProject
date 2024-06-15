@@ -59,9 +59,9 @@
                                 <td>{{u.topic}}</td>
                                 <td>{{u.due_date}}</td>
                                 <td>
-                                    {% if completed_tasks_count %}
+                                    {% if u.status == 'completed' %}
                                     <span class="badge bg-success">Completed</span>
-                                    {% else  %}
+                                    {% else %}
                                     <span class="badge bg-warning">On Progress</span>
                                     {% endif %}
                                 </td>

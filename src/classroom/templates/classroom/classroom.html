@@ -6,12 +6,18 @@
 
 
 {% block content %}
-<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="{% static 'mainapp/js/app.min.js' %}"></script>
+<!-- <link rel="stylesheet" href="{% static 'mainapp/css/app.min.css' %}">
+<link rel="stylesheet" href="{% static 'mainapp/css/bootstrap.min.css' %}"> -->
 
+<head>
+    <meta charset="UTF-8">
+    <title>Create Tugas</title>
+    {{ form.media }}
+</head>
 <!-- ROW -->
+<br><br>
 <div class="row">
     <div class="col-12 ">
         <div class="card bg-dark shadow p-3 mb-3 bg-white rounded">
@@ -52,428 +58,189 @@
                             </div>
                         </div>
                         <!-- TEXT AREA -->
-                        <div id="post-textarea" class="card shadow-sm d-none">
-                            <div class="card-body">
-                                <form action="{% url 'posts:create_post' classroom.pk %}" method="POST"
-                                    enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    <div class="form-group">
-                                        {{ post_form.title|safe}}
-                                    </div>
-                                    <div class="form-group">
-                                        {{post_form.description|safe}}
-                                    </div>
-                                    <div class="form-group">
-                                        {{ post_form.file_field|safe }}
-                                    </div>
-                                    <button type="submit" class="btn btn-sm btn-primary m-1 pl-3 pr-3 float-right">
-                                        Post
-                                    </button>
-                                    <button id="cancel-post" class="btn btn-sm btn-outline-dark m-1 float-right">
-                                        Cancel
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                        <!-- END TEXT AREA -->
                     </div>
-                    <!-- END COL -->
-                    <!-- COL -->
-                    {% for content in contents %}
-                    <div class="col-12">
-                        <!-- CARD -->
-                        <div class="card shadow-sm mt-3">
-                            <div class="card-body">
-                                <img src="{% static 'mainapp/img/undraw_posting_photo.svg' %}" width="35" height="35"
-                                    alt="..." class="rounded-circle mr-2 mb-2 float-left">
-                                <div class="dropdown no-arrow float-right">
-                                    <a class="btn btn-circle dropdown-toggle" href="#" role="button"
-                                        id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-dark"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                        aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 order-lg-2 order-xl-1">
+                            <!-- new post -->
+                            <div class="card">
+                                <div id="post-textarea" class="card shadow-sm d-none">
+                                    <div class="card-body">
+                                        <form action="{% url 'posts:create_post' classroom.pk %}" method="POST"
+                                            enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                {{ post_form.title|attr:"class:form-control" }}
+                                            </div>
+                                            <div class="form-group">
+                                                {{post_form.description}}
+                                            </div>
+                                            <div class="form-group">
+                                                {{ post_form.file_field|attr:"class:basic-filepond look" }}
+                                            </div>
+                                            <button type="submit"
+                                                class="btn btn-sm btn-primary m-1 pl-3 pr-3 float-right">
+                                                Post
+                                            </button>
+                                            <button id="cancel-post"
+                                                class="btn btn-sm btn-outline-dark m-1 float-right">
+                                                Cancel
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
-                                <!-- Container -->
-                                <div class="container">
-                                    {% if content.content_type == 'post' %}
-                                    <h4 class="text-primary">{{ content.title }}</h4>
-                                    {% else %}
-                                    <a href="{% url 'classroom:assignment_submit' content.pk %}">
-                                        <h4 class="text-primary">{{ content.title }}</h4>
-                                    </a>
-                                    {% endif %}
-                                    <h6>Posted on {{ content.created_at }} By {{ content.created_by.username }}</h6>
-                                </div>
-                                <!-- End Container -->
-                                <!-- CARD -->
-
-                                <div class="row">
-                                    {% for resource in content.resources %}
-                                    <div class="col-6">
-                                        <div class="card mb-3 ml-2">
-                                            <div class="row no-gutters">
-                                                <div class="col-md-4">
-                                                    <img src="{{ resource.files.url  }}"
-                                                        class="card-img img-fluid d-none d-lg-block" alt="...">
+                            </div>
+                            <!-- <div class="tab-content pt-0">
+                                <div class="tab-pane show active p-3" id="newpost" role="tabpanel">
+                                    <div class="border rounded">
+                                        <form action="#" class="comment-area-box">
+                                            <textarea rows="4" class="form-control border-0 resize-none"
+                                                placeholder="Write something...."></textarea>
+                                            <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <a href="#" class="btn btn-sm px-2 font-16 btn-light"><i
+                                                            class="mdi mdi-image-outline"></i></a>
+                                                    <a href="#" class="btn btn-sm px-2 font-16 btn-light"><i
+                                                            class="mdi mdi-crosshairs-gps"></i></a>
+                                                    <a href="#" class="btn btn-sm px-2 font-16 btn-light"><i
+                                                            class="mdi mdi-attachment"></i></a>
                                                 </div>
-                                                <div class="col-md-8">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title "><a target="_blank"
-                                                                href="{{ resource.files.url  }}">{{
-                                                                resource.filename}}</a>
-                                                        </h5>
+                                                <button type="submit" class="btn btn-sm btn-success"><i
+                                                        class="mdi mdi-send-outline me-1"></i>Post</button>
+                                            </div>
+                                        </form>
+                                    </div> 
+                                </div> 
+                            </div>  -->
+                            {% for content in contents %}
+                            {% if content.content_type == 'post' %}
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start">
+                                        <div class="d-flex flex-row">
+                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35" alt="..."
+                                                class="rounded-circle mr-4" style="margin-right: 10px;">
+                                        </div>
+                                        <div class="w-100">
+                                            <div class="dropdown float-end text-muted">
+                                                <a href="#" class="dropdown-toggle text-muted font-18"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="mdi mdi-dots-horizontal"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <!-- item-->
+                                                    <a href="javascript:void(0);" class="dropdown-item">Edit</a>
+                                                    <!-- item-->
+                                                    <a href="javascript:void(0);" class="dropdown-item">Delete</a>
+                                                </div>
+                                            </div>
+                                            <h6 class="m-0"><a href="contacts-profile.html" class="text-reset">{{content.created_by.username }}</a></h6>
+                                            <p class="text-muted"><small>{{ content.created_at }}</small></p>
+                                            <h5 class="text-black text-left">{{ content.title }}</h5>
+                                        </div>
+                                        {% else %}
+                                        <a href="{% url 'classroom:assignment_submit' content.pk %}">
+                                            <h4 class="text-primary">{{ content.title }}</h4>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="row">
+                                        {% for resource in content.resources %}
+                                        <div class="col-6">
+                                            <div class="card mb-3 ml-2">
+                                                <div class="row no-gutters">
+                                                    <div class="col-md-4">
+                                                        <img style="width: 500px;" src="{{ resource.files.url  }}" class="card-img img-fluid d-none d-lg-block" alt="...">
+                                                            <small class="card-title "><a target="_blank"
+                                                                href="{{ resource.files.url  }}">{{resource.filename}}</a>
+                                                        </small>
                                                     </div>
+                                                    <div class="col-md-8">
+                                                        <div class="card-body">
+                                                            <div class="font-16 text-left text-dark">
+                                                                <i class="mdi mdi-format-quote-open font-20"></i>
+                                                                <p>
+                                                                    {{content.description|safe}}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="mt-3">
+                                        <a href="javascript: void(0);" class="btn btn-sm btn-link text-muted ps-0"><i
+                                                class="mdi mdi-heart-outline text-danger"></i> 751 Likes</a>
+                                        <a href="javascript: void(0);" class="btn btn-sm btn-link text-muted"><i
+                                                class="mdi mdi-comment-multiple-outline"></i> 85 Comments</a>
+                                    </div>
+                                </div>
+                                {% if content.content_type == 'post' %}
+                                <div class="post-user-comment-box mt-2">
+                                    {% for comment in content.post_comment %}
+                                    <div class="d-flex align-items-start" style="margin-left: 4px;">
+                                        <div class="d-flex flex-row">
+                                            <img src="{{ comment.user.profile.image.url }}" width="35" height="35" alt="..."
+                                                class="rounded-circle mr-2">
+                                            <p class='ml-2'><strong>{{ comment.user }}</strong>: {{ comment.comment_text}}</p>
+                                        </div>
+                                        <div class="w-100">
+                                            <h5 class="mt-0"><a href="contacts-profile.html" class="text-reset">{{comment.user }}</a>
+                                                <small class="text-muted">{{ comment.created_at }}</small>
+                                            </h5>
+                                            {{ comment.comment_text|safe}}
+                                            <br>
+                                            <a href="javascript: void(0);"
+                                                class="text-muted font-13 d-inline-block mt-2"><i
+                                                    class="mdi mdi-reply"></i> Reply</a>
+
+                                            <div class="d-flex align-items-start mt-3">
+                                                <a class="pe-2" href="#">
+                                                    <img src="assets/images/users/user-4.jpg"
+                                                        class="avatar-sm rounded-circle"
+                                                        alt="Generic placeholder image">
+                                                </a>
+                                                <div class="w-100">
+                                                    <h5 class="mt-0"><a href="contacts-profile.html"
+                                                            class="text-reset">Kathleen
+                                                            Thomas</a> <small class="text-muted">5 hours
+                                                            ago</small></h5>
+                                                    i'm in the middle of a timelapse animation myself! (Very
+                                                    different though.)
+                                                    Awesome stuff.
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     {% endfor %}
-                                </div>
-                            </div>
 
-                            {% if content.content_type == 'post' %}
-                            <hr>
-                            <div class="card-body">
-                                {% for comment in content.post_comment %}
-                                <div class="d-flex flex-row">
-                                    <img src="{{ comment.user.profile.image.url }}" width="35" height="35" alt="..."
-                                        class="rounded-circle mr-2">
-                                    <p class='ml-2'><strong>{{ comment.user }}</strong>: {{ comment.comment_text}}</p>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            <hr>
-                            <div class="card-body">
-                                <form action="{% url 'comments:create_comment' content.pk %}" method="post">
-                                    <div class="input-group">
-                                        <img src="{{ request.user.profile.image.url }}" width="35" height="35" alt="..."
-                                            class="rounded-circle ml-2 mr-2">
-                                        {% csrf_token %}
-                                        {{ comment_form.comment_text|attr:"class:form-control
-                                        rounded-pill"|attr:"placeholder:Add a class comment" }}
-                                        <div class="input-group-append">
-                                            <button class=" btn btn-circle" type="submit" id="button-addon2"><i
-                                                    class="fas fa-angle-double-right"></i></button>
-                                        </div>
+                                    <div class="d-flex align-items-start mt-2">
+                                        <form action="{% url 'comments:create_comment' content.pk %}" method="post">
+                                            <div class="input-group">
+                                                <img src="{{ request.user.profile.image.url }}" width="35" height="35" alt="..."
+                                                    class="rounded-circle ml-2 mr-2">
+                                                {% csrf_token %}
+                                                {{ comment_form.comment_text|attr:"class:form-control rounded-pill"|attr:"placeholder:Add a class comment" }}
+                                                <div class="input-group-append">
+                                                    <button class=" btn btn-circle" type="submit" id="button-addon2"><i
+                                                            class="fas fa-angle-double-right"></i></button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                </form>
+                                    {% endif %}
+                                </div>
                             </div>
-                            {% endif %}
+                            {% endfor %}
                         </div>
-                        <!-- END CARD -->
                     </div>
-                    {% endfor %}
-                    <!-- END COL -->
                 </div>
             </div>
-            <!-- END ROW -->
         </div>
     </div>
-    <dov class="col-12">
-        <div class="row">
-            <div class="card" style="width: 48rem">
-                <div class="border border-left border-right px-0">
-                    <div class="p-3 border-bottom">
-                        <h4 class="d-flex align-items-center mb-0">
-                            Home <i class="far fa-xs fa-star ms-auto text-primary"></i>
-                        </h4>
-                    </div>
-                    <div>
-                        <div class="card shadow-0">
-                            <div class="card-body border-bottom pb-2">
-                                <div class="d-flex">
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img (31).webp"
-                                        class="rounded-circle" height="50" alt="Avatar" loading="lazy" />
-                                    <div class="d-flex align-items-center w-100 ps-3">
-                                        <div class="w-100">
-                                            <input type="text" id="form143"
-                                                class="form-control form-status border-0 py-1 px-0"
-                                                placeholder="What's happening" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <ul class="list-unstyled d-flex flex-row ps-3 pt-3" style="margin-left: 50px;">
-                                        <li>
-                                            <a href=""><i class="far fa-image pe-2"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href=""><i class="fas fa-photo-video px-2"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href=""><i class="fas fa-chart-bar px-2"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href=""><i class="far fa-smile px-2"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href=""><i class="far fa-calendar-check px-2"></i></a>
-                                        </li>
-                                    </ul>
-                                    <div class="d-flex align-items-center">
-                                        <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                            class="btn btn-primary btn-rounded">Tweet</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="d-flex p-3 border-bottom">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img (29).webp"
-                                    class="rounded-circle" height="50" alt="Avatar" loading="lazy" />
-                                <div class="d-flex w-100 ps-3">
-                                    <div>
-                                        <a href="">
-                                            <h6 class="text-body">
-                                                Miley Cyrus
-                                                <span class="small text-muted font-weight-normal">@mileycyrus</span>
-                                                <span class="small text-muted font-weight-normal"> • </span>
-                                                <span class="small text-muted font-weight-normal">2h</span>
-                                                <span><i class="fas fa-angle-down float-end"></i></span>
-                                            </h6>
-                                        </a>
-                                        <p style="line-height: 1.2;">
-                                            Lorem ipsum dolor, sit amet <a href="">#consectetur</a> adipisicing elit.
-                                            Nobis assumenda eveniet ipsum libero mollitia vero doloremque
-                                            <a href="">#perspiciatis</a> molestiae omnis, quam iure dicta reprehenderit
-                                            distinctio facere labore atque, sit <a href="">#ratione</a> quo.
-                                        </p>
-                                        <ul class="list-unstyled d-flex justify-content-between mb-0 pe-xl-5">
-                                            <li>
-                                                <i class="far fa-comment"></i>
-                                            </li>
-                                            <li><i class="fas fa-retweet"></i><span class="small ps-2">7</span></li>
-                                            <li><i class="far fa-heart"></i><span class="small ps-2">35</span></li>
-                                            <li>
-                                                <i class="far fa-share-square"></i>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex p-3 border-bottom">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img (29).webp"
-                                    class="rounded-circle" height="50" alt="Avatar" loading="lazy" />
-                                <div class="d-flex w-100 ps-3">
-                                    <div>
-                                        <a href="#">
-                                            <h6 class="text-body">
-                                                Miley Cyrus
-                                                <span class="small text-muted font-weight-normal">@mileycyrus</span>
-                                                <span class="small text-muted font-weight-normal"> • </span>
-                                                <span class="small text-muted font-weight-normal">3h</span>
-                                                <span><i class="fas fa-angle-down float-end"></i></span>
-                                            </h6>
-                                        </a>
-                                        <p style="line-height: 1.2;">
-                                            Nobis assumenda eveniet ipsum libero mollitia vero doloremque molestiae
-                                            reprehenderit.
-                                        </p>
-                                        <div class="card border mb-3 shadow-0" style="max-width: 540px;">
-                                            <div class="row g-0">
-                                                <div class="col-md-3">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img (21).webp"
-                                                        alt="Avatar" class="img-fluid rounded-left" />
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <div class="card-body">
-                                                        <p class="card-text" style="line-height: 1;">
-                                                            Title of the news
-                                                        </p>
-                                                        <p class="card-text small mb-0" style="line-height: 1.2;">
-                                                            This is a wider card with supporting text below as a natural
-                                                            lead-in
-                                                            to additional content.
-                                                        </p>
-                                                        <p class="card-text small mb-0" style="line-height: 1.2;">
-                                                            <i class="fas fa-link fa-xs pe-1"></i>example.pl
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <ul class="list-unstyled d-flex justify-content-between mb-0 pe-xl-5">
-                                            <li>
-                                                <i class="far fa-comment"></i>
-                                            </li>
-                                            <li><i class="fas fa-retweet"></i><span class="small ps-2">51</span></li>
-                                            <li><i class="far fa-heart"></i><span class="small ps-2">185</span></li>
-                                            <li>
-                                                <i class="far fa-share-square"></i>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex p-3 border-bottom">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img (22).webp"
-                                    class="rounded-circle" height="50" alt="Avatar" loading="lazy" />
-                                <div class="d-flex w-100 ps-3">
-                                    <div>
-                                        <a href="#">
-                                            <h6 class="text-body">
-                                                Bob Marley
-                                                <span class="small text-muted font-weight-normal">@bobmarley</span>
-                                                <span class="small text-muted font-weight-normal"> • </span>
-                                                <span class="small text-muted font-weight-normal">5h</span>
-                                                <span><i class="fas fa-angle-down float-end"></i></span>
-                                            </h6>
-                                        </a>
-                                        <p style="line-height: 1.2;">
-                                            Lorem ipsum dolor, sit amet <a href="">#consectetur</a> adipisicing elit.
-                                            Officiis, <a href="">#repellat</a>. Error cumque temporibus eum pariatur
-                                            ducimus facere? Obcaecati fugit, nobis eos <a href="">#deserunt</a> odit
-                                            libero voluptatibus, iste laudantium, tempore ratione ut.
-                                        </p>
-                                        <div class="card border mb-3 shadow-0" style="max-width: 540px;">
-                                            <div class="row g-0">
-                                                <div class="col-md-3">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img (20).webp"
-                                                        alt="Avatar" class="img-fluid rounded-left" />
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <div class="card-body">
-                                                        <p class="card-text" style="line-height: 1;">
-                                                            Title of the news
-                                                        </p>
-                                                        <p class="card-text small mb-0" style="line-height: 1.2;">
-                                                            This is a wider card with supporting text below as a natural
-                                                            lead-in
-                                                            to additional content.
-                                                        </p>
-                                                        <p class="card-text small mb-0" style="line-height: 1.2;">
-                                                            <i class="fas fa-link fa-xs pe-1"></i>example.pl
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <ul class="list-unstyled d-flex justify-content-between mb-0 pe-xl-5">
-                                            <li>
-                                                <i class="far fa-comment"></i>
-                                            </li>
-                                            <li><i class="fas fa-retweet"></i><span class="small ps-2">8</span></li>
-                                            <li><i class="far fa-heart"></i><span class="small ps-2">97</span></li>
-                                            <li>
-                                                <i class="far fa-share-square"></i>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex p-3 border-bottom">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img (24).webp"
-                                    class="rounded-circle" height="50" alt="Avatar" loading="lazy" />
-                                <div class="d-flex w-100 ps-3">
-                                    <div>
-                                        <a href="">
-                                            <h6 class="text-body">
-                                                Anna Doe
-                                                <span class="small text-muted font-weight-normal">@annadoe</span>
-                                                <span class="small text-muted font-weight-normal"> • </span>
-                                                <span class="small text-muted font-weight-normal">7h</span>
-                                                <span><i class="fas fa-angle-down float-end"></i></span>
-                                            </h6>
-                                        </a>
-                                        <p style="line-height: 1.2;">
-                                            Error cumque temporibus eum pariatur ducimus facere? Obcaecati fugit, nobis
-                                            eos <a href="">#deserunt</a> odit libero voluptatibus, iste laudantium,
-                                            tempore ratione ut.
-                                        </p>
-                                        <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp"
-                                            class="img-fluid rounded mb-3" alt="Fissure in Sandstone" />
-                                        <ul class="list-unstyled d-flex justify-content-between mb-0 pe-xl-5">
-                                            <li>
-                                                <i class="far fa-comment"></i>
-                                            </li>
-                                            <li><i class="fas fa-retweet"></i><span class="small ps-2">11</span></li>
-                                            <li><i class="far fa-heart"></i><span class="small ps-2">65</span></li>
-                                            <li>
-                                                <i class="far fa-share-square"></i>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex p-3 border-bottom mb-5">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img (3).webp"
-                                    class="rounded-circle" height="50" alt="Avatar" loading="lazy" />
-                                <div class="d-flex w-100 ps-3">
-                                    <div>
-                                        <a href="">
-                                            <h6 class="text-body">
-                                                Mark Twain
-                                                <span class="small text-muted font-weight-normal">@marktawin</span>
-                                                <span class="small text-muted font-weight-normal"> • </span>
-                                                <span class="small text-muted font-weight-normal">10h</span>
-                                                <span><i class="fas fa-angle-down float-end"></i></span>
-                                            </h6>
-                                        </a>
-                                        <p style="line-height: 1.2;">
-                                            Obcaecati fugit, nobis eos odit libero voluptatibus, iste laudantium,
-                                            tempore ratione ut.
-                                        </p>
-                                        <div class="ratio ratio-16x9 mb-3">
-                                            <iframe src="https://www.youtube.com/embed/vlDzYIIOYmM"
-                                                title="YouTube video" allowfullscreen></iframe>
-                                        </div>
-                                        <ul class="list-unstyled d-flex justify-content-between mb-0 pe-xl-5">
-                                            <li>
-                                                <i class="far fa-comment"></i>
-                                            </li>
-                                            <li><i class="fas fa-retweet"></i><span class="small ps-2">34</span></li>
-                                            <li><i class="far fa-heart"></i><span class="small ps-2">159</span></li>
-                                            <li>
-                                                <i class="far fa-share-square"></i>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </dov>
 </div>
-</div>
-<!-- <script>
-    // get all the elements
-    const clickedPost = document.getElementById("clicked-post");
-    const postTextArea = document.getElementById("post-textarea");
-    const cancelPost = document.getElementById("cancel-post")
-
-    // add event listeners
-    clickedPost.addEventListener("click", () => {
-        clickedPost.classList.toggle("d-none");
-        postTextArea.classList.toggle("d-none");
-    })
-    cancelPost.addEventListener("click", () => {
-        clickedPost.classList.toggle("d-none");
-        postTextArea.classList.toggle("d-none");
-    })
-    $(function () {
-        $(".dropdown-menu").on('click', 'a', function () {
-            $(this).parents('.dropdown').find('button').text($(this).text());
-        });
-    });
-
-    $(document).ready(function () {
-        $("#flip").click(function () {
-            $("#panel").slideToggle("slow");
-        });
-    });
-
-</script> -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const clickedPost = document.getElementById("clicked-post");
@@ -513,7 +280,7 @@
             console.error(error);
         });
 </script>
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Initialize CKEditor for the content field
         CKEDITOR.replace('id_content');
@@ -568,7 +335,7 @@
             stopRecordButton.classList.add('d-none');
         });
     });
-</script>
+</script> -->
 <!-- ROW END -->
 
 {% endblock content %}

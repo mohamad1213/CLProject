@@ -56,10 +56,16 @@ INSTALLED_APPS = [
     'sweetify'
 ]
 SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
-
+CELERY_BEAT_SCHEDULE = {
+    'update-tugas-status-every-minute': {
+        'task': 'posts.tasks.update_tugas_status',
+        'schedule': 60.0,  # setiap 60 detik
+    },
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'posts.middleware.UpdateTugasStatusMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -136,18 +142,30 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+CKEDITOR_FILENAME_GENERATOR = 'utils.get_filename'
 CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Full',
-        'height': 300,
-        'width': '100%',
-    },
-    'awesome_ckeditor': {
+    'default':{
         'toolbar': 'Full',  # You can customize this to your needs
         'height': 400,
         'width': '100%',
-        'extraPlugins': 'codesnippet',  # Example of adding extra plugins
+        'extraPlugins': ','.join([
+            'uploadimage',  # Necessary for uploading images
+            'codesnippet',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath'
+        ]),
+        'filebrowserUploadUrl': '/ckeditor/upload/',
+        'filebrowserBrowseUrl': '/ckeditor/browse/',
         'codeSnippet_theme': 'monokai_sublime',  # Example of configuring a plugin
     },
 }

@@ -15,16 +15,11 @@ class JoinClassroomForm(forms.Form):
 
 class PostForm(forms.Form):
     title = forms.CharField()
-    description = forms.CharField(widget=forms.Textarea())
+    description = forms.CharField(widget=CKEditorWidget())
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))
     # class Meta:
     #     model = Post
     #     fields = ['title','description']
-    widgets = {
-            'title': forms.TextInput({'class': 'form-control', 'type':'text', 'style':'padding:6px 10px ;border: 1px solid #ced4da'}),
-            'description': forms.TextInput({'class': 'form-control', 'type':'text', 'style':'padding:6px 10px ;border: 1px solid #ced4da', "id":"id_content"}),
-            'file_field': forms.FileInput({ 'class': 'form-control' , 'type':'text','style':'padding:6px 10px ;border: 1px solid #ced4da'}),
-    }
 
 class AssignmentFileForm(forms.Form):
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))
@@ -39,8 +34,9 @@ class AssignmentCreateForm(forms.Form):
             topics.extend(list(classroom.topic_set.all()))
         self.fields['topics'].choices = [(str(topic.pk),f"{topic.name}->{topic.classroom.name}") for topic in topics]
 
+    
     title = forms.CharField()
-    description = forms.CharField(widget=forms.Textarea)
+    description = forms.CharField(widget=CKEditorWidget())
     classrooms = forms.ChoiceField()
     topics = forms.ChoiceField()
     points = forms.IntegerField(min_value=0,max_value =100)

@@ -6,9 +6,6 @@ from .models import User,Profile
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import Group
 
-
-
-
 def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)

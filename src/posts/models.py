@@ -87,10 +87,15 @@ class Assignment(models.Model):
         return max(len(self.topic.classroom.users.all()) - self.total_turned_in, 0)
 
 class SubmittedAssignment(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+    ]
     assignment = models.ForeignKey(Assignment, on_delete = models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     turned_in = models.BooleanField(default = False)
     grade = models.IntegerField(default=0)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     is_reviewed = models.BooleanField(default=False)
     
     @property
@@ -131,3 +136,16 @@ class Attachment(models.Model):
     @property
     def filename(self):
         return os.path.split(self.files.name)[-1]
+class StudentReport(models.Model):
+    student = models.ForeignKey(User,  limit_choices_to={'group': 'siswa'}, on_delete=models.CASCADE)
+    course = models.ForeignKey(SubmittedAssignment, on_delete=models.CASCADE)
+    grade = models.CharField(max_length=2)
+    attendance = models.FloatField(help_text="Attendance in percentage")
+    remarks = models.TextField(blank=True, null=True)
+    date_reported = models.DateField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('student', 'course')
+    
+    def __str__(self):
+        return f"Report: {self.student} - {self.course}"

@@ -17,6 +17,7 @@ def create_comment(request, post_pk):
                 post = post
             )
             comment.save()
+            print(form.errors)
             return redirect('classroom:open_classroom', post.topic.classroom.pk)
 
 @login_required

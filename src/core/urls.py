@@ -31,7 +31,7 @@ urlpatterns = [
     # path('', views.landing, name='landing-page'),
     path('users/', include('users.urls')),
     path('courses/', include('courses.urls')),
-    path('posts/', include('posts.urls')),
+    path('report/', include('posts.urls')),
     path('whiteboard/', include('whiteboard.urls')),
     path('assignments/', include('assignments.urls')),
     path('ide/', include('ide.urls')),
@@ -61,6 +61,5 @@ urlpatterns = [
     ),
       name='password_reset_complete'),
 ] 
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

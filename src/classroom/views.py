@@ -214,9 +214,10 @@ def turnin(request,pk):
         if not submitted_assignment:
             submitted_assignment = SubmittedAssignment.objects.create(assignment = assignment, user = request.user)
         submitted_assignment.turned_in = True 
+        submitted_assignment.status = 'completed'
         submitted_assignment.save()
-        
-    return redirect('classroom:assignment_submit', pk)
+        sweetify.success(request, f'Tugas telah diselesaikan')
+        return redirect('classroom:assignment_submit', pk)
 
 @login_required
 def unsubmit(request,pk):
@@ -243,6 +244,7 @@ def unsubmit_file(request, pk):
 
 @login_required
 def todo(request):
+    submitted_assignments = SubmittedAssignment.objects.filter(user=request.user)
     classrooms = request.user.classroom_set.all()
     topics = []
     for classroom in classrooms:
@@ -250,12 +252,21 @@ def todo(request):
     assignments = []
     for topic in topics:
         assignments.extend(list(topic.assignment_set.all()))
-    filtered_assignment = []
+    filtered_assignments = []
+    # for assignment in assignments:
+    #     if not assignment.is_turnedin(request.user):
+    #         filtered_assignment.append(assignment)
     for assignment in assignments:
-        if not assignment.is_turnedin(request.user):
-            filtered_assignment.append(assignment)
-    context = {'assignments':filtered_assignment}
-    
+        submitted_assignment = assignment.submittedassignment_set.filter(user=request.user).first()
+        if submitted_assignment:
+            status = submitted_assignment.status
+        else:
+            status = 'pending'
+        filtered_assignments.append({
+            'assignment': assignment,
+            'status': status
+        })
+    context = {'assignments': filtered_assignments,'submitted_assignments':submitted_assignments,}
     return render(request, 'classroom/todo.html', context)
 
 

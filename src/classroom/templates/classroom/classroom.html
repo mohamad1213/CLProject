@@ -89,71 +89,44 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="tab-content pt-0">
-                                <div class="tab-pane show active p-3" id="newpost" role="tabpanel">
-                                    <div class="border rounded">
-                                        <form action="#" class="comment-area-box">
-                                            <textarea rows="4" class="form-control border-0 resize-none"
-                                                placeholder="Write something...."></textarea>
-                                            <div class="p-2 bg-light d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <a href="#" class="btn btn-sm px-2 font-16 btn-light"><i
-                                                            class="mdi mdi-image-outline"></i></a>
-                                                    <a href="#" class="btn btn-sm px-2 font-16 btn-light"><i
-                                                            class="mdi mdi-crosshairs-gps"></i></a>
-                                                    <a href="#" class="btn btn-sm px-2 font-16 btn-light"><i
-                                                            class="mdi mdi-attachment"></i></a>
-                                                </div>
-                                                <button type="submit" class="btn btn-sm btn-success"><i
-                                                        class="mdi mdi-send-outline me-1"></i>Post</button>
-                                            </div>
-                                        </form>
-                                    </div> 
-                                </div> 
-                            </div>  -->
                             {% for content in contents %}
-                            {% if content.content_type == 'post' %}
-
+                            <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-start">
                                         <div class="d-flex flex-row">
-                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35" alt="..."
-                                                class="rounded-circle mr-4" style="margin-right: 10px;">
+                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35"
+                                                alt="..." class="rounded-circle mr-4" style="margin-right: 10px;">
                                         </div>
                                         <div class="w-100">
-                                            <div class="dropdown float-end text-muted">
-                                                <a href="#" class="dropdown-toggle text-muted font-18"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="mdi mdi-dots-horizontal"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <!-- item-->
-                                                    <a href="javascript:void(0);" class="dropdown-item">Edit</a>
-                                                    <!-- item-->
-                                                    <a href="javascript:void(0);" class="dropdown-item">Delete</a>
-                                                </div>
-                                            </div>
-                                            <h6 class="m-0"><a href="contacts-profile.html" class="text-reset">{{content.created_by.username }}</a></h6>
+                                            <h6 class="m-0"><a href="contacts-profile.html"
+                                                class="text-reset">{{content.created_by.username }}</a></h6>
                                             <p class="text-muted"><small>{{ content.created_at }}</small></p>
-                                            <h5 class="text-black text-left">{{ content.title }}</h5>
-                                        </div>
-                                        {% else %}
-                                        <a href="{% url 'classroom:assignment_submit' content.pk %}">
-                                            <h4 class="text-primary">{{ content.title }}</h4>
-                                        </a>
-                                        {% endif %}
+                                            <div class="dropdown no-arrow float-end">
+                                                <a class="btn btn-circle dropdown-toggle" href="#" role="button"
+                                                id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-dark"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                            <li><h6 class="dropdown-header">Dropdown Header:</h6></li>
+                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                            </ul>
+                                        </div>                                        
+                                    </div>
                                     </div>
                                     <div class="row">
                                         {% for resource in content.resources %}
+                                        {% if content.content_type == 'post' %}
                                         <div class="col-6">
                                             <div class="card mb-3 ml-2">
                                                 <div class="row no-gutters">
                                                     <div class="col-md-4">
-                                                        <img style="width: 500px;" src="{{ resource.files.url  }}" class="card-img img-fluid d-none d-lg-block" alt="...">
-                                                            <small class="card-title "><a target="_blank"
-                                                                href="{{ resource.files.url  }}">{{resource.filename}}</a>
-                                                        </small>
+                                                        <img style="width: 500px;" src="{{ resource.files.url}}"
+                                                            class="card-img img-fluid d-none d-lg-block" alt="...">
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div class="card-body">
@@ -168,73 +141,96 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        {% else %}
+                                        <div class="col-6">
+                                            <div class="card mb-3">
+                                                <div class="row no-gutters">
+                                                    <div class="col-md-4">
+                                                        <a type="button" class="btn btn-primary" href="{% url 'classroom:assignment_submit' content.pk %}"><small>Lihat Tugas</small>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-6" style="margin-right: 8px;">
+                                                    <small class="text-black text-left mb-1">{{ content.title }}</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
                                         {% endfor %}
-                                    </div>
-                                    <div class="mt-3">
-                                        <a href="javascript: void(0);" class="btn btn-sm btn-link text-muted ps-0"><i
-                                                class="mdi mdi-heart-outline text-danger"></i> 751 Likes</a>
-                                        <a href="javascript: void(0);" class="btn btn-sm btn-link text-muted"><i
-                                                class="mdi mdi-comment-multiple-outline"></i> 85 Comments</a>
                                     </div>
                                 </div>
                                 {% if content.content_type == 'post' %}
-                                <div class="post-user-comment-box mt-2">
+                                <hr>
+                                <div class="card-body">
                                     {% for comment in content.post_comment %}
-                                    <div class="d-flex align-items-start" style="margin-left: 4px;">
+                                    <div class="d-flex align-items-start">
                                         <div class="d-flex flex-row">
-                                            <img src="{{ comment.user.profile.image.url }}" width="35" height="35" alt="..."
-                                                class="rounded-circle mr-2">
-                                            <p class='ml-2'><strong>{{ comment.user }}</strong>: {{ comment.comment_text}}</p>
+                                            <img src="{{ comment.user.profile.image.url }}" width="35" height="35"
+                                                alt="..." class="rounded-circle mr-4" style="margin-right: 10px;">
                                         </div>
-                                        <div class="w-100">
-                                            <h5 class="mt-0"><a href="contacts-profile.html" class="text-reset">{{comment.user }}</a>
+                                        <div class="w-100 mt-2">
+                                            <h6 class="mt-0"><a href="contacts-profile.html"
+                                                    class="text-reset">{{comment.user }}</a>
                                                 <small class="text-muted">{{ comment.created_at }}</small>
-                                            </h5>
-                                            {{ comment.comment_text|safe}}
+                                            </h6>
+                                            <p>
+                                                {{ comment.comment_text|safe}}
+                                            </p>
                                             <br>
-                                            <a href="javascript: void(0);"
-                                                class="text-muted font-13 d-inline-block mt-2"><i
-                                                    class="mdi mdi-reply"></i> Reply</a>
-
-                                            <div class="d-flex align-items-start mt-3">
-                                                <a class="pe-2" href="#">
-                                                    <img src="assets/images/users/user-4.jpg"
-                                                        class="avatar-sm rounded-circle"
-                                                        alt="Generic placeholder image">
-                                                </a>
-                                                <div class="w-100">
-                                                    <h5 class="mt-0"><a href="contacts-profile.html"
-                                                            class="text-reset">Kathleen
-                                                            Thomas</a> <small class="text-muted">5 hours
-                                                            ago</small></h5>
-                                                    i'm in the middle of a timelapse animation myself! (Very
-                                                    different though.)
-                                                    Awesome stuff.
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     {% endfor %}
-
-                                    <div class="d-flex align-items-start mt-2">
-                                        <form action="{% url 'comments:create_comment' content.pk %}" method="post">
-                                            <div class="input-group">
-                                                <img src="{{ request.user.profile.image.url }}" width="35" height="35" alt="..."
-                                                    class="rounded-circle ml-2 mr-2">
+                                </div>
+                                <div class="card-body">
+                                    <form action="{% url 'comments:create_comment' content.pk %}" method="post">
+                                        <div class="input-group">
+                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35" alt="..." class="rounded-circle ml-2 mr-2">
                                                 {% csrf_token %}
                                                 {{ comment_form.comment_text|attr:"class:form-control rounded-pill"|attr:"placeholder:Add a class comment" }}
                                                 <div class="input-group-append">
-                                                    <button class=" btn btn-circle" type="submit" id="button-addon2"><i
-                                                            class="fas fa-angle-double-right"></i></button>
+                                                    <button class=" btn btn-circle" type="submit" id="button-addon2"><i class="fas fa-angle-double-right"></i></button>
                                                 </div>
                                             </div>
-                                        </form>
-                                    </div>
-                                    {% endif %}
+                                    </form>
                                 </div>
+                                {% else %}
+                                <hr>
+                                <div class="card-body">
+                                    {% for comment in content.post_comment %}
+                                    <div class="d-flex align-items-start">
+                                        <div class="d-flex flex-row">
+                                            <img src="{{ comment.user.profile.image.url }}" width="35" height="35"
+                                                alt="..." class="rounded-circle mr-4" style="margin-right: 10px;">
+                                        </div>
+                                        <div class="w-100 mt-2">
+                                            <h6 class="mt-0"><a href="contacts-profile.html"
+                                                    class="text-reset">{{comment.user }}</a>
+                                                <small class="text-muted">{{ comment.created_at }}</small>
+                                            </h6>
+                                            <p>
+                                                {{ comment.comment_text|safe}}
+                                            </p>
+                                            <br>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="card-body">
+                                    <form action="comment/create/{{content.pk}}" method="post">
+                                        <div class="input-group">
+                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35" alt="..." class="rounded-circle ml-2 mr-2">
+                                                {% csrf_token %}
+                                                {{ comment_form.comment_text|attr:"class:form-control rounded-pill"|attr:"placeholder:Add a class comment" }}
+                                                <div class="input-group-append">
+                                                    <button class=" btn btn-circle" type="submit" id="button-addon2"><i class="fas fa-angle-double-right"></i></button>
+                                                </div>
+                                            </div>
+                                    </form>
+                                </div>
+                                {% endif %}
                             </div>
-                            {% endfor %}
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

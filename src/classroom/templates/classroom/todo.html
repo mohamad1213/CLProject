@@ -5,6 +5,7 @@
 {% block title %} Home {% endblock title %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <header class="mb-3">
@@ -35,27 +36,40 @@
         <section class="section">
             <div class="card">
                 <div class="card-body">
-                    <table class="table table-striped" id="table1">
+                    <table class="table table-striped table-bordered" id="studentsTodo">
                         <thead>
-                            <tr>
+                            <tr class="text-center">
                                 <th>No</th>
                                 <th>Judul</th>
                                 <th>Topic</th>
-                                <th>Tanggal buat</th>
                                 <th>Tenggat Waktu</th>
+                                <th>Nilai</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        {% for u in assignments %}
+                        {% for u in submitted_assignments %}
                         <tbody>
-                            <tr>
+                            <tr class="text-center">
                                 <td>{{forloop.counter}}</td>
-                                <td>{{u.title}}</td>
-                                <td>{{ u.topic.classroom.name }}</td>
-                                <td>{{ u.created_at }}</td>
-                                <td>{{ u.due_date }}</td>
+                                <!-- <td>{{ u.user.get_full_name }}</td> -->
+                                <td>{{ u.assignment.title }}</td>
+                                <td>{{ u.assignment.topic.classroom.name }}</td>
+                                <td>{{ u.assignment.due_date|date:"d F Y, H:i" }}</td>
+                                {% if u.grade %}
+                                <td><span class="badge bg-success">{{u.grade}}</span></td>
+                                {% else %}
+                                <td><span class="badge bg-warning">Belum dinilai</span></td>
+                                {% endif %}
                                 <td>
-                                    <a href="{% url 'classroom:assignment_submit' u.pk %}" type="button"
+                                    {% if u.status == 'completed' %}
+                                    <span class="badge bg-success">Completed</span>
+                                    {% else %}
+                                    <span class="badge bg-warning">On Progress</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'classroom:assignment_submit' u.assignment.pk %}" type="button"
                                         class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                 </td>
                             </tr>
@@ -67,4 +81,12 @@
         </section>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Link CDN DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#studentsTodo').DataTable();
+    });
+</script>
 {% endblock content %}

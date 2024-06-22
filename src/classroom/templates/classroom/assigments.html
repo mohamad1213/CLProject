@@ -57,7 +57,7 @@
                                 <td>{{u.title}}k</td>
                                 <td>{{u.created_by}}</td>
                                 <td>{{u.topic}}</td>
-                                <td>{{u.due_date}}</td>
+                                <td>{{u.due_date|date:"d F Y, H:i"}}</td>
                                 <td>
                                     {% if u.status == 'completed' %}
                                     <span class="badge bg-success">Completed</span>

@@ -36,7 +36,7 @@
                         <i class="fas fa-clipboard"></i> 
                         <a class="text-decoration-none" href="{% url 'classroom:assignment_submit' assignment.pk %}">{{ assignment.title }}</a>
                         
-                        <em class="text-muted d-inline float-right">Due on {{ assignment.due_date }}</em>
+                        <em class="text-muted d-inline float-right">Due on {{ assignment.due_date|date:"d F Y, H:i" }}</em>
                         </div>
                     </div>
                     </div>

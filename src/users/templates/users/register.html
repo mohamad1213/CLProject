@@ -1,5 +1,6 @@
 {% extends 'user_base.html' %}
 {% load widget_tweaks %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block title %} Register {% endblock title %}
@@ -9,8 +10,19 @@
     <div class="card-body p-0">
         <!-- Nested Row within Card Body -->
         <div class="row">
-            <div class="col-lg-5 d-none d-lg-block bg-register-image"
-                style="background-image: url(https://images.unsplash.com/photo-1567168544646-208fa5d408fb?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=334&q=80);">
+            <div class="col-lg-5  bg-register-image">
+                <style>
+                    .bg-register-image {
+                        background: url("{% static 'mainapp/img/logo.png' %}");
+                        background-position: center;
+                        background-size: cover;
+                        -webkit-transform: rotate(90deg);
+                        -moz-transform: rotate(90deg);
+                        -ms-transform: rotate(90deg);
+                        -o-transform: rotate(90deg);
+                        transform: rotate(90deg);
+                    }
+                </style>
             </div>
             <div class="col-lg-7">
                 <div class="p-5">
@@ -29,7 +41,6 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary btn-user btn-block">Register</button>
-
                     </form>
                     <hr>
                     <div class="text-center">

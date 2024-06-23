@@ -35,7 +35,7 @@ class AssignmentCreateForm(forms.Form):
 
     
     title = forms.CharField()
-    description = forms.CharField(widget=CKEditorWidget())
+    description = forms.CharField(widget=SummernoteWidget())
     classrooms = forms.ChoiceField()
     topics = forms.ChoiceField()
     points = forms.IntegerField(min_value=0,max_value =100)

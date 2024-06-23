@@ -37,7 +37,6 @@ urlpatterns = [
     path('ide/', include('ide.urls')),
     path('newsletter/', include('newsletter.urls')),
     path('contactus/', include('contactus.urls')),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
     path('summernote/', include('django_summernote.urls')),
     path('accounts/', include('users.urls'), name='accounts'),
     path('password-reset/', 

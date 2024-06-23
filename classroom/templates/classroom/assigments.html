@@ -38,47 +38,49 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped table-bordered" id="studentsTable">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Judul</th>
-                                <th>Guru</th>
-                                <th>Topic</th>
-                                <th>Deadline</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for u in assignment %}
-                            <tr>
-                                <td>{{forloop.counter}}</td>
-                                <td>{{u.title}}k</td>
-                                <td>{{u.created_by}}</td>
-                                <td>{{u.topic}}</td>
-                                <td>{{u.due_date|date:"d F Y, H:i"}}</td>
-                                <td>
-                                    {% if u.status == 'completed' %}
-                                    <span class="badge bg-success">Completed</span>
-                                    {% else %}
-                                    <span class="badge bg-warning">On Progress</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#updateModal-{{u.id}}">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#delete-{{u.id}}">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered" id="studentsTable">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Judul</th>
+                                    <th>Guru</th>
+                                    <th>Topic</th>
+                                    <th>Deadline</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for u in assignment %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ u.title }}</td>
+                                    <td>{{ u.created_by }}</td>
+                                    <td>{{ u.topic }}</td>
+                                    <td>{{ u.due_date|date:"d F Y, H:i" }}</td>
+                                    <td>
+                                        {% if u.status == 'completed' %}
+                                        <span class="badge bg-success">Completed</span>
+                                        {% else %}
+                                        <span class="badge bg-warning">On Progress</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#updateModal-{{ u.id }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#delete-{{ u.id }}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>

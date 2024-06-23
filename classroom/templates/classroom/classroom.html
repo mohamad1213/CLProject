@@ -8,14 +8,17 @@
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="{% static 'mainapp/js/app.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
 <link rel="stylesheet" href="{% static 'summernote/summernote-bs4.min.css' %}">
 <script type="text/javascript" src="{% static 'summernote/summernote-bs4.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/summernote_footer.js' %}"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
 <link rel="stylesheet" href="{% static 'js/summernote.css' %}">
-<!-- <link rel="stylesheet" href="{% static 'mainapp/css/app.min.css' %}">
-<link rel="stylesheet" href="{% static 'mainapp/css/bootstrap.min.css' %}"> -->
 
 <head>
     <meta charset="UTF-8">
@@ -24,18 +27,27 @@
 </head>
 <!-- ROW -->
 <br><br>
-<div class="row">
-    <div class="col-12 ">
-        <div class="card bg-dark shadow p-3 mb-3 bg-white rounded">
-            <img src="{% static 'mainapp/img/undraw_posting_photo.svg' %}" height="175" class="card-img" alt="...">
-            <div class="card-img-overlay">
-                <h1 class="card-title"><b>{{ classroom.name }}</b></h1>
-                <p class="card-text">{{ classroom.description }}</p>
-                <input type="text" value="{{ classroom.classroom_code }}" id="classroom-code">
-                <button class="btn btn-sm btn-outline-primary" onclick="copyCode()">Copy</button>
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark shadow p-3 mb-3 bg-white rounded">
+                <img src="{% static 'mainapp/img/undraw_posting_photo.svg' %}" class="card-img" alt="..." style="max-height: 175px; object-fit: cover;">
+                <div class="card-img-overlay d-flex flex-column justify-content-center align-items-start">
+                    <h1 class="card-title text-wrap"><b>{{ classroom.name }}</b></h1>
+                    <p class="card-text text-wrap">{{ classroom.description }}</p>
+                    <div class="input-group mb-3" style="width: 100%; max-width: 300px;">
+                        <input type="text" class="form-control" value="{{ classroom.classroom_code }}" id="classroom-code" readonly>
+                        <button class="btn btn-sm btn-primary" onclick="copyCode()">Copy</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <style>
+        .card-title, .card-text {
+            word-wrap: break-word;
+        }
+    </style>
     <div class="col-12">
         <div class="row">
             <div class="col-lg-3 d-none d-lg-block">
@@ -128,40 +140,43 @@
                                             <div class="card mb-3 ml-2">
                                                 <div class="row no-gutters">
                                                     <div class="col-md-4">
-                                                        <img style="width: 500px;" src="{{ resource.files.url}}"
-                                                            class="card-img img-fluid d-none d-lg-block" alt="...">
+                                                        <a href="{{ resource.files.url }}" data-fancybox="gallery" data-caption="{{ content.description }}">
+                                                            <img src="{{ resource.files.url }}" class="card-img img-fluid" alt="...">
+                                                        </a>
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div class="card-body">
                                                             <div class="font-16 text-left text-dark">
                                                                 <i class="mdi mdi-format-quote-open font-20"></i>
-                                                                <p>
-                                                                    {{content.description|safe}}
-                                                                </p>
+                                                                <p>{{ content.description|safe }}</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>                                        
                                         {% else %}
                                         <div class="col-6">
                                             <div class="card mb-3">
-                                                <div class="row no-gutters">
-                                                    <div class="col-md-4">
-                                                        <a type="button" class="btn btn-primary" href="{% url 'classroom:assignment_submit' content.pk %}"><small>Lihat Tugas</small>
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col-md-4 text-center">
+                                                        <a href="{% url 'classroom:assignment_submit' content.pk %}" class="btn btn-primary btn-md">
+                                                            <small>Lihat Tugas</small>
                                                         </a>
                                                     </div>
-                                                    <div class="col-md-6" style="margin-right: 8px;">
-                                                    <small class="text-black text-left mb-1">{{ content.title }}</small>
+                                                    <div class="col-md-8">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title mb-1">{{ content.title }}</h6>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>                                        
                                         {% endif %}
                                         {% endfor %}
                                     </div>
                                 </div>
+                                <hr style="border: none; border-top: 1px solid #525050;">
                                 {% if content.content_type == 'post' %}
                                 <hr>
                                 <div class="card-body">
@@ -197,10 +212,9 @@
                                     </form>
                                 </div>
                                 {% else %}
-                                <hr>
                                 <div class="card-body">
                                     {% for comment in content.post_comment %}
-                                    <div class="d-flex align-items-start">
+                                    <div class="d-flex align-items-start mb-3">
                                         <div class="d-flex flex-row">
                                             <img src="{{ comment.user.profile.image.url }}" width="35" height="35"
                                                 alt="..." class="rounded-circle mr-4" style="margin-right: 10px;">
@@ -240,6 +254,13 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('[data-fancybox="gallery"]').fancybox({
+            // Custom options can go here
+        });
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const clickedPost = document.getElementById("clicked-post");

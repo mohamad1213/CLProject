@@ -33,23 +33,25 @@
             </div>
         </div>
         <section class="section">
+            {% for u in request.user.groups.all %}
             <div class="card">
-                <div class="card-header" style="text-align: right;">
-                    {% for u in request.user.groups.all %}
-                    {% if u.name == 'guru' %}
-                    <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalCenter" href="#">
-                        Create Classroom
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    {% elif u.name == 'siswa' %}
-                    <a style="float: left;" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm h1" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal" href="#">
-                        Join Classroom
-                    </a>
-                    {% endif %}
-                    {% endfor %}
+                <div class="card-header">
+                    <div class="card-body">
+                        {% if u.name == 'guru' %}
+                        <a class="btn btn-sm btn-primary shadow-md mb-3" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalCenter" href="#">
+                            Create Classroom
+                        </a>
+                        {% elif u.name == 'siswa' %}
+                        <div class="dropdown-divider"></div>
+                        <a style="float: left;" class="btn btn-md btn-primary shadow-sm mb-3"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal" href="#">
+                            Join Classroom
+                        </a>
+                    </div>
                 </div>
+                {% endif %}
+                {% endfor %}
                 <!-- ROW  -->
                 <!-- Page Heading -->
 

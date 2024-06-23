@@ -9,6 +9,8 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from .forms import StudentReportForm
+import sweetify
+
 
 @login_required
 def create_post(request, pk):
@@ -17,16 +19,14 @@ def create_post(request, pk):
         if form.is_valid():
             classroom = get_object_or_404(Classroom,pk = pk)
             topic = classroom.topic_set.first()
-            title = form.cleaned_data.get('title')
             description = form.cleaned_data.get('description')
             files = request.FILES.getlist('file_field')
-            post = Post.objects.create(title=title,description=description,created_by=request.user, topic = topic)
+            post = Post.objects.create(description=description,created_by=request.user, topic = topic)
             for f in files:
                 Resource.objects.create(post = post,files=f)
-            
-            messages.success(request, f'Post Created {title}')
+            sweetify.success(request, f'Post Created')
         else:
-            messages.danger(request, f'Cannot create post')
+            sweetify.error(request, f'Cannot create post')
     
     return redirect('classroom:open_classroom', pk)
 

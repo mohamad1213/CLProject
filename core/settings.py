@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'ckeditor',
     'ckeditor_uploader',
+    'django_summernote',
     'classroom',
     'posts',
     'users',
@@ -143,31 +144,50 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-CKEDITOR_FILENAME_GENERATOR = 'utils.get_filename'
+
+SUMMERNOTE_THEME = 'bs4'  # Show summernote with Bootstrap4
+# SUMMERNOTE_CONFIG = {
+#     'iframe': False,  # Set to True if you want Summernote to use an iframe
+#     'summernote': {
+#         'width': '100%',  # Set editor width
+#         'height': '480',  # Set editor height
+#         'toolbar': [
+#             ['style', ['style']],
+#             ['font', ['bold', 'italic', 'underline', 'clear']],
+#             ['fontname', ['fontname']],
+#             ['color', ['color']],
+#             ['para', ['ul', 'ol', 'paragraph']],
+#             ['height', ['height']],
+#             ['table', ['table']],
+#             ['insert', ['link', 'picture', 'video']],
+#             ['view', ['fullscreen', 'codeview', 'help']],
+#         ],
+#     },
+# }
+SUMMERNOTE_CONFIG = {
+    'toolbar': [
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['para', ['ul']],
+    ],
+    'summernote': {
+        'width': '100%',
+        'height': '300px',
+    },
+    'js': ('/static/js/summernote_footer.js',), 
+    'css': ('/static/css/summernote_custom.css',), 
+}
+
+
+KEDITOR_FILENAME_GENERATOR = 'utils.get_filename'
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_CONFIGS = {
-    'default':{
-        'toolbar': 'Full',  # You can customize this to your needs
-        'height': 400,
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
         'width': '100%',
-        'extraPlugins': ','.join([
-            'uploadimage',  # Necessary for uploading images
-            'codesnippet',
-            'autolink',
-            'autoembed',
-            'embedsemantic',
-            'autogrow',
-            'widget',
-            'lineutils',
-            'clipboard',
-            'dialog',
-            'dialogui',
-            'elementspath'
-        ]),
         'filebrowserUploadUrl': '/ckeditor/upload/',
         'filebrowserBrowseUrl': '/ckeditor/browse/',
-        'codeSnippet_theme': 'monokai_sublime',  # Example of configuring a plugin
     },
 }
 

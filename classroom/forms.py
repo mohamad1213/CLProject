@@ -5,6 +5,9 @@ from posts.models import Post
 from django.db import models
 from ckeditor.fields import RichTextField
 from ckeditor.widgets import CKEditorWidget
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
+
 class ClassroomCreationForm(ModelForm):
     class Meta:
         model = Classroom
@@ -14,12 +17,8 @@ class JoinClassroomForm(forms.Form):
     code = forms.CharField(label='Enter Code', max_length=100)
 
 class PostForm(forms.Form):
-    title = forms.CharField()
-    description = forms.CharField(widget=CKEditorWidget())
+    description = forms.CharField(widget=SummernoteWidget())
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))
-    # class Meta:
-    #     model = Post
-    #     fields = ['title','description']
 
 class AssignmentFileForm(forms.Form):
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))

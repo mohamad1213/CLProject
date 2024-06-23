@@ -122,8 +122,6 @@ def members(request, pk):
 def assignment(request):
     assignment = Assignment.objects.all()
     completed_tasks_count = Assignment.objects.filter(status='completed', due_date__lte=now_indonesia).count()
-
-    # Hitung jumlah tugas yang masih dalam progress (status onprogress)
     onprogress_tasks_count = Assignment.objects.filter(status=Assignment.onprogress, due_date__lte=now_indonesia).count()
     print(f"Assignment {completed_tasks_count}: status={onprogress_tasks_count}")
     context = {

@@ -14,71 +14,71 @@
 {% if u.name == 'siswa' %}
 <div class="page-content">
   <section class="row">
-    <div class="col-12 col-lg-12">
+    <div class="col-12">
       <div class="row">
-        <div class="col-6 col-lg-3 col-md-6">
+        <div class="col-12 col-lg-3 col-md-6 mb-3">
           <div class="card">
             <div class="card-body px-4 py-4-5">
               <div class="row">
-                <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                <div class="col-xxl-5 col-6 d-flex justify-content-start">
                   <div class="stats-icon purple mb-2">
-                    <i class="iconly-boldShow"></i>
+                    <i class="fas fa-check-circle"></i>
                   </div>
                 </div>
-                <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                  <h6 class="text-muted font-semibold">Total Pengguna</h6>
-                  <h6 class="font-extrabold mb-0">112.000</h6>
+                <div class="col-xxl-7 col-6">
+                  <h6 class="text-muted font-semibold">Total Submit</h6>
+                  <h6 class="font-extrabold mb-0">{{total_submit}}</h6>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-6 col-lg-3 col-md-6">
+        <div class="col-12 col-lg-3 col-md-6 mb-3">
           <div class="card">
             <div class="card-body px-4 py-4-5">
               <div class="row">
-                <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                <div class="col-xxl-5 col-6 d-flex justify-content-start">
                   <div class="stats-icon blue mb-2">
-                    <i class="iconly-boldProfile"></i>
+                    <i class="fas fa-chalkboard"></i>
                   </div>
                 </div>
-                <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                  <h6 class="text-muted font-semibold">Total Kelas</h6>
-                  <h6 class="font-extrabold mb-0">183.000</h6>
+                <div class="col-xxl-7 col-6">
+                  <h6 class="text-muted font-semibold">Total Classroom</h6>
+                  <h6 class="font-extrabold mb-0">{{total_classrooms}}</h6>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-6 col-lg-3 col-md-6">
+        <div class="col-12 col-lg-3 col-md-6 mb-3">
           <div class="card">
             <div class="card-body px-4 py-4-5">
               <div class="row">
-                <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                <div class="col-xxl-5 col-6 d-flex justify-content-start">
                   <div class="stats-icon green mb-2">
-                    <i class="iconly-boldAdd-User"></i>
+                    <i class="fas fa-tasks"></i>
                   </div>
                 </div>
-                <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                <div class="col-xxl-7 col-6">
                   <h6 class="text-muted font-semibold">Total Tugas</h6>
-                  <h6 class="font-extrabold mb-0">80.000</h6>
+                  <h6 class="font-extrabold mb-0">{{total_tugas}}</h6>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-6 col-lg-3 col-md-6">
+        <div class="col-12 col-lg-3 col-md-6 mb-3">
           <div class="card">
             <div class="card-body px-4 py-4-5">
               <div class="row">
-                <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                <div class="col-xxl-5 col-6 d-flex justify-content-start">
                   <div class="stats-icon red mb-2">
-                    <i class="iconly-boldBookmark"></i>
+                    <i class="fas fa-comment"></i>
                   </div>
                 </div>
-                <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                  <h6 class="text-muted font-semibold">Total Forum</h6>
-                  <h6 class="font-extrabold mb-0">112</h6>
+                <div class="col-xxl-7 col-6">
+                  <h6 class="text-muted font-semibold">Total Posting</h6>
+                  <h6 class="font-extrabold mb-0">{{total_posting}}</h6>
                 </div>
               </div>
             </div>
@@ -86,7 +86,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12 col-xl-8">
+        <div class="col-12 col-xl-8 mb-3">
           <div class="card">
             <div class="card-header">
               <h4>Aktifitas Diskusi</h4>
@@ -96,7 +96,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12 col-xl-4">
+        <div class="col-12 col-xl-4 mb-3">
           <div class="card">
             <div class="card-header">
               <h4>Visitors Profile</h4>
@@ -108,7 +108,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12 col-xl-8">
+        <div class="col-12 col-xl-8 mb-3">
           <div class="card">
             <div class="card-header">
               <h4>Tugas Terbaru</h4>
@@ -119,86 +119,42 @@
                   <thead>
                     <tr>
                       <th>Nama Guru</th>
+                      <th>Kelas</th>
                       <th>Deskripsi</th>
                       <th>Tanggal</th>
                       <th>Deadline</th>
-                      <th>File</th>
+                      <th>Status</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
+                  {% for u in recent_task %}
                   <tbody>
                     <tr>
-                      <td class="col-3">
-                        <div class="d-flex align-items-center">
-                          <div class="avatar avatar-md">
-                            <img src="./assets/compiled/jpg/5.jpg">
-                          </div>
-                          <p class="font-bold ms-3 mb-0">Si Cantik</p>
-                        </div>
+                      <td>{{u.created_by}}</td>
+                      <td>{{ u.topic.classroom.name }}</td>
+                      <td>{{ u.title }}</td>
+                      <td>{{ u.created_at }}</td>
+                      <td>{{ u.due_date|date:"d F Y, H:i" }}</td>
+                      <td>
+                        {% if u.status == 'completed' %}
+                        <span class="badge bg-success">Completed</span>
+                        {% else %}
+                        <span class="badge bg-warning">On Progress</span>
+                        {% endif %}
                       </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">Buatlah Tugas Matematika!</p>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">20 Agustus 2023</p>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">24 Agustus 2023</p>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">file</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="col-3">
-                        <div class="d-flex align-items-center">
-                          <div class="avatar avatar-md">
-                            <img src="./assets/compiled/jpg/5.jpg">
-                          </div>
-                          <p class="font-bold ms-3 mb-0">Si Cantik</p>
-                        </div>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">Buatlah Tugas Matematika!</p>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">20 Agustus 2023</p>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">24 Agustus 2023</p>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">file</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="col-3">
-                        <div class="d-flex align-items-center">
-                          <div class="avatar avatar-md">
-                            <img src="./assets/compiled/jpg/5.jpg">
-                          </div>
-                          <p class="font-bold ms-3 mb-0">Si Cantik</p>
-                        </div>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">Buatlah Tugas Matematika!</p>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">20 Agustus 2023</p>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">24 Agustus 2023</p>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">file</p>
+                      <td>
+                        <a href="{% url 'classroom:assignment_submit' u.pk %}" type="button"
+                          class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i></a>
                       </td>
                     </tr>
                   </tbody>
+                  {% endfor %}
                 </table>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-12 col-xl-4">
+        <div class="col-12 col-xl-4 mb-3">
           <div class="card">
             <div class="card-header">
               <h4>Pengguna Terbaru</h4>
@@ -224,30 +180,15 @@
               </div>
               <div class="recent-message d-flex px-4 py-3">
                 <div class="avatar avatar-lg">
-                  <img src="./assets/compiled/jpg/1.jpg">
+                  <img src="./assets/compiled/jpg/4.jpg">
                 </div>
                 <div class="name ms-4">
-                  <h5 class="mb-1">John Dodol</h5>
-                  <h6 class="text-muted mb-0">Guru</h6>
+                  <h5 class="mb-1">Hank Schrader</h5>
+                  <h6 class="text-muted mb-0">Staf</h6>
                 </div>
               </div>
-              <div class="recent-message d-flex px-4 py-3">
-                <div class="avatar avatar-lg">
-                  <img src="./assets/compiled/jpg/1.jpg">
-                </div>
-                <div class="name ms-4">
-                  <h5 class="mb-1">John Dodol</h5>
-                  <h6 class="text-muted mb-0">Guru</h6>
-                </div>
-              </div>
-              <div class="recent-message d-flex px-4 py-3">
-                <div class="avatar avatar-lg">
-                  <img src="./assets/compiled/jpg/1.jpg">
-                </div>
-                <div class="name ms-4">
-                  <h5 class="mb-1">John Dodol</h5>
-                  <h6 class="text-muted mb-0">Guru</h6>
-                </div>
+              <div class="px-4">
+                <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3">Lihat Semua</button>
               </div>
             </div>
           </div>
@@ -261,69 +202,70 @@
   <section class="row">
     <div class="col-12 col-lg-12">
       <div class="row">
-        <div class="col-6 col-lg-3 col-md-6">
+        <div class="col-12 col-lg-3 col-md-6 mb-3">
           <div class="card">
             <div class="card-body px-4 py-4-5">
               <div class="row">
-                <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                <div class="col-xxl-5 col-6 d-flex justify-content-start">
                   <div class="stats-icon purple mb-2">
-                    <i class="iconly-boldShow"></i>
+                    <i class="fa-solid fa-users"></i>
+                    <!-- <i class="fas fa-graduation-cap"></i> -->
                   </div>
                 </div>
-                <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                  <h6 class="text-muted font-semibold">Total Siswa</h6>
+                <div class="col-xxl-7 col-6">
+                  <h6 class="text-muted font-semibold">Total siswa</h6>
                   <h6 class="font-extrabold mb-0">112.000</h6>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-6 col-lg-3 col-md-6">
+        <div class="col-12 col-lg-3 col-md-6 mb-3">
           <div class="card">
             <div class="card-body px-4 py-4-5">
               <div class="row">
-                <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                  <div class="stats-icon blue mb-2">
-                    <i class="iconly-boldProfile"></i>
-                  </div>
-                </div>
-                <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                  <h6 class="text-muted font-semibold">Total Kelas yang diampu</h6>
-                  <h6 class="font-extrabold mb-0">183.000</h6>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-6 col-lg-3 col-md-6">
-          <div class="card">
-            <div class="card-body px-4 py-4-5">
-              <div class="row">
-                <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                <div class="col-xxl-5 col-6 d-flex justify-content-start">
                   <div class="stats-icon green mb-2">
-                    <i class="iconly-boldAdd-User"></i>
+                    <i class="fas fa-chalkboard"></i>
                   </div>
                 </div>
-                <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                  <h6 class="text-muted font-semibold">Total Tugas </h6>
-                  <h6 class="font-extrabold mb-0">80.000</h6>
+                <div class="col-xxl-7 col-6">
+                  <h6 class="text-muted font-semibold">Total Kelas</h6>
+                  <h6 class="font-extrabold mb-0">{{total_classrooms}}</h6>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-6 col-lg-3 col-md-6">
+        <div class="col-12 col-lg-3 col-md-6 mb-3">
           <div class="card">
             <div class="card-body px-4 py-4-5">
               <div class="row">
-                <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
+                <div class="col-xxl-5 col-6 d-flex justify-content-start">
                   <div class="stats-icon red mb-2">
-                    <i class="iconly-boldBookmark"></i>
+                    <i class="fas fa-tasks"></i>
                   </div>
                 </div>
-                <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                  <h6 class="text-muted font-semibold">Total Forum</h6>
-                  <h6 class="font-extrabold mb-0">112</h6>
+                <div class="col-xxl-7 col-6">
+                  <h6 class="text-muted font-semibold">Total Tugas</h6>
+                  <h6 class="font-extrabold mb-0">{{total_tugas_guru}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-3 col-md-6 mb-3">
+          <div class="card">
+            <div class="card-body px-4 py-4-5">
+              <div class="row">
+                <div class="col-xxl-5 col-6 d-flex justify-content-start">
+                  <div class="stats-icon blue mb-2">
+                    <i class="fa-solid fa-comment"></i>
+                  </div>
+                </div>
+                <div class="col-xxl-7 col-6">
+                  <h6 class="text-muted font-semibold">Total Posting</h6>
+                  <h6 class="font-extrabold mb-0">{{total_posting}}</h6>
                 </div>
               </div>
             </div>
@@ -331,7 +273,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12 col-xl-8">
+        <div class="col-12 col-xl-8 mb-3">
           <div class="card">
             <div class="card-header">
               <h4>Aktifitas Diskusi</h4>
@@ -341,7 +283,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12 col-xl-4">
+        <div class="col-12 col-xl-4 mb-3">
           <div class="card">
             <div class="card-header">
               <h4>Visitors Profile</h4>
@@ -353,7 +295,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12 col-xl-6">
+        <div class="col-12 col-xl-8 mb-3">
           <div class="card">
             <div class="card-header">
               <h4>Latest Comments</h4>
@@ -417,7 +359,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12 col-xl-6">
+        <div class="col-12 col-xl-4 mb-3">
           <div class="card">
             <div class="card-header">
               <h4>Recent Messages</h4>
@@ -466,3 +408,73 @@
 {% endif %}
 
 {% endblock %}
+<style>
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .card-body .row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card-body .row .col-xxl-5,
+    .card-body .row .col-xxl-7 {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .page-heading h3 {
+      font-size: 1.5rem;
+    }
+
+    .table-responsive table thead,
+    .table-responsive table tbody tr {
+      display: block;
+      width: 100%;
+    }
+
+    .table-responsive table thead tr {
+      display: none;
+    }
+
+    .table-responsive table tbody tr {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .table-responsive table tbody td {
+      display: flex;
+      justify-content: space-between;
+      padding: .75rem;
+    }
+
+    .table-responsive table tbody td::before {
+      content: attr(data-label);
+      flex-basis: 45%;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .table-responsive table tbody td:nth-child(1)::before {
+      content: "Nama Guru";
+    }
+
+    .table-responsive table tbody td:nth-child(2)::before {
+      content: "Deskripsi";
+    }
+
+    .table-responsive table tbody td:nth-child(3)::before {
+      content: "Tanggal";
+    }
+
+    .table-responsive table tbody td:nth-child(4)::before {
+      content: "Deadline";
+    }
+
+    .table-responsive table tbody td:nth-child(5)::before {
+      content: "File";
+    }
+  }
+</style>

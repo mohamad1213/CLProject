@@ -3,14 +3,16 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from posts.models import Post
+from comments.models import Comment
 from django.utils import timezone
 import sweetify
-
+from itertools import chain
 from .models import Classroom,Topic,ClassroomTeachers
 from posts.models import Assignment,SubmittedAssignment,AssignmentFile, Attachment
 from .forms import ClassroomCreationForm,JoinClassroomForm, PostForm, AssignmentFileForm, AssignmentCreateForm
 from comments.forms import CommentCreateForm, PrivateCommentForm
 import pytz
+from django.contrib.auth.models import User, Group
 now_utc = timezone.now()
 tz_indonesia = pytz.timezone('Asia/Jakarta')
 now_indonesia = now_utc.astimezone(tz_indonesia)
@@ -31,13 +33,53 @@ def home(requests):
 def dashboard(requests):
     teaching_classes = set([classroom.classroom for classroom in requests.user.classroomteachers_set.all()])
     classrooms = set(requests.user.classroom_set.all()).union(teaching_classes)
-    classroom_form = ClassroomCreationForm()
-    join_classroom_form = JoinClassroomForm()
+    total_classrooms = len(classrooms)
+    user = User.objects.get(username=requests.user)
+    total_posting = Post.objects.filter(created_by=user).count()
+    total_submit = SubmittedAssignment.objects.filter(user=requests.user, status='completed').count()
+    total_tugas_guru = Assignment.objects.count()
+    all_assignments = []
+    for classroom in classrooms:
+        assignments = Assignment.objects.filter(topic__classroom=classroom)
+        all_assignments.extend(assignments)
+    classrooms = requests.user.classroom_set.all()
+    topics = []
+    for classroom in classrooms:
+        topics.extend(list(classroom.topic_set.all()))
+    assignments = []
+    for topic in topics:
+        assignments.extend(list(topic.assignment_set.all()))
+    completed_assignments = []  # List for completed assignments
+    pending_assignments = []  # List for pending (in progress) assignments
+    for assignment in assignments:
+        submitted_assignment = assignment.submittedassignment_set.filter(user=requests.user).first()
+        if submitted_assignment:
+            status = submitted_assignment.status
+            if status == 'completed':
+                completed_assignments.append(assignment)
+            else:
+                pending_assignments.append(assignment)
+        else:
+            pending_assignments.append(assignment)
+    all_classrooms = Classroom.objects.all()
+
+# Menghitung total siswa dari semua kelas
+    total_students = User.objects.filter(users__in=all_classrooms).count()
+
+    total_tugas_siswa = len(pending_assignments)
+    comment = Comment.objects.filter(user=user)
+    total_tugas = SubmittedAssignment.objects.filter(user=requests.user, status='completed').count()
     context = {
-        'classrooms' : classrooms,
-        'classroom_form': classroom_form,
-        'join_classroom_form':join_classroom_form,
+        'total_classrooms' : total_classrooms,
+        'total_submit' : total_submit,
+        'total_posting' : total_posting,
+        'total_tugas_guru' : total_tugas_guru,
+        'total_tugas_siswa' : total_tugas_siswa,
+        'total_tugas' : total_tugas,
+        'comment' : comment,
+        'recent_task' : pending_assignments,
     }
+    print(total_students)
     return render(requests, 'classroom/beranda.html', context)
 @login_required
 def create_classroom(request):
@@ -264,7 +306,7 @@ def todo(request):
             'assignment': assignment,
             'status': status
         })
-    context = {'assignments': filtered_assignments,'submitted_assignments':submitted_assignments,}
+    context = {'assignments': filtered_assignments}
     return render(request, 'classroom/todo.html', context)
 
 

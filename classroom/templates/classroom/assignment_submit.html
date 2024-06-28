@@ -127,7 +127,6 @@
               <div class="mb-1 mt-3 ml-3 mr-1">
                 {% for comment in assignment.comments %}
                 {% if is_teacher or comment.user == request.user %}
-
                 <div class="d-flex align-items-start">
                   <div class="d-flex flex-row">
                     <img src="{{ comment.user.profile.image.url }}" width="35" height="35" alt="..."
@@ -135,7 +134,7 @@
                   </div>
                   <div class="w-100 mt-2">
                     <h6 class="mt-0"><a href="contacts-profile.html" class="text-reset">{{comment.user }}</a>
-                      <small class="text-muted">{{ comment.created_at }}</small>
+                      <small class="text-muted">{{ comment.created_at|date:"d F Y, H:i"  }}</small>
                     </h6>
                     <p>
                       {{ comment.comment_text|safe}}
@@ -146,6 +145,18 @@
                 {% endif %}
                 {% endfor %}
               </div>
+              <form action="{% url 'comments:private_comment' assignment.pk %}" method="post">
+                <div class="input-group">
+                  <img src="{{ request.user.profile.image.url }}" width="35" height="35" alt="..."
+                    class="rounded-circle ml-2 mr-2">
+                  {% csrf_token %}
+                  {{ private_comment_form.comment_text|attr:"class:form-control rounded-pill"|attr:"placeholder:Add a class comment" }}
+                  <div class="input-group-append">
+                    <button class=" btn btn-circle" type="submit" id="button-addon2"><i
+                        class="fas fa-angle-double-right"></i></button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>

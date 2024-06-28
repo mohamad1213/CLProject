@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block title %} Assignment-Create {% endblock title %}
+
+{% block content %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'vendor/assets/extensions/simple-datatables/style.css' %}">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+<link rel="stylesheet" href="{% static 'vendor/assets/compiled/css/table-datatable.css' %}">
+{% endblock css %}
+<head>
+    <meta charset="UTF-8">
+    <title>Create Tugas</title>
+    {{ form.media }}
+</head>
+<header class="mb-3">
+    <a href="#" class="burger-btn d-block d-xl-none">
+        <i class="bi bi-justify fs-3"></i>
+    </a>
+</header>
+<div class="page-heading">
+    <h3>Tambah Tugas</h3>
+</div>
+<div class="page-content">
+    <div class="page-heading">
+        <div class="page-title">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <p class="text-subtitle text-muted">A sortable, searchable, paginated table without
+                            dependencies thanks to simple-datatables.</p>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
+                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Kelas</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <section id="multiple-column-form">
+                <div class="row match-height">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Multiple Column</h4>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <form action="{% url 'classroom:assignment_create' %}" method="POST"
+                                        enctype='multipart/form-data'>
+                                        {% csrf_token %}
+                                        <!-- Make a form here -->
+                                        <div class="row m-3">
+                                            <div class="col-lg-8">
+                                                <div class="form-group">
+                                                    <label for="title">Title</label>
+                                                    {{ form.title|attr:"class:form-control" }}
+                                                </div>
+                                                <hr>
+                                                <div class="form-group">
+                                                    <label for="description">Description</label>
+                                                    {{ form.description}}
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form.file_field|attr:"class:basic-filepond look" }}
+                                                </div>
+                                            </div>
+                                            <!-- The selection stuff -->
+                                            <div class="col-lg-4 vl v p-3 mt-sm-2">
+                                                <!-- For -->
+                                                <hr class='d-lg-none d-sm-block'>
+                                                <h5>For</h5>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        {{ form.classrooms|attr:"class:form-control" }}
+                                                    </div>
+                                                </div>
+                                                <hr>
+
+                                                <!-- Points -->
+                                                <h5>Points</h5>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        {{ form.points|attr:"class:form-control" }}
+                                                    </div>
+                                                </div>
+                                                <hr>
+
+                                                <!-- Due -->
+                                                <h5>Due</h5>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        {{form.due_date|attr:"class:form-control"|attr:"type:datetime-local"}}
+                                                    </div>
+                                                </div>
+                                                <hr>
+
+                                                <!-- Topic -->
+                                                <h5>Topic</h5>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        {{ form.topics|attr:"class:form-control" }}
+                                                    </div>
+                                                </div>
+                                                <hr>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">Save
+                                                changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock content %}

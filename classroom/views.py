@@ -6,6 +6,7 @@ from posts.models import Post
 from comments.models import Comment
 from django.utils import timezone
 import sweetify
+from django.urls import reverse_lazy
 from itertools import chain
 from .models import Classroom,Topic,ClassroomTeachers
 from posts.models import Assignment,SubmittedAssignment,AssignmentFile, Attachment
@@ -78,6 +79,7 @@ def dashboard(requests):
         'total_tugas' : total_tugas,
         'comment' : comment,
         'recent_task' : pending_assignments,
+        'total_siswa' : pending_assignments,
     }
     print(total_students)
     return render(requests, 'classroom/beranda.html', context)
@@ -206,7 +208,43 @@ def assignment_create(request):
     context = {'form':form}
     return render(request, 'classroom/assignment_create.html', context)
 
+@login_required
+def assignment_update(request, pk):
+    assignment = get_object_or_404(Assignment, pk=pk)
+    
+    if request.method == 'POST':
+        form = AssignmentCreateForm(request.user, request.POST, request.FILES, instance=assignment)
+        if form.is_valid():
+            topic = get_object_or_404(Topic, pk=int(form.cleaned_data['topics']))
+            due_date = form.cleaned_data['due_date']
+            now_indonesia = timezone.now()  # Ensure this is set correctly
+            
+            if due_date > now_indonesia:
+                status = Assignment.onprogress
+            else:
+                status = Assignment.completed
+            
+            assignment.title = form.cleaned_data['title']
+            assignment.description = form.cleaned_data['description']
+            assignment.topic = topic
+            assignment.due_date = due_date
+            assignment.marks = form.cleaned_data['point']
+            assignment.status = status
+            assignment.save()
 
+            # Update attachments
+            files = request.FILES.getlist('file_field')
+            for f in files:
+                Attachment.objects.create(assignment=assignment, files=f)
+            
+            sweetify.success(request, 'Tugas berhasil diperbarui.')
+            return redirect('classroom:open_classroom', topic.classroom.pk)
+        else:
+            sweetify.error(request, f'Tugas gagal diperbarui: {form.errors.as_text()}')
+    else:
+        form = AssignmentCreateForm(request.user, instance=assignment)
+    existing_attachments = Attachment.objects.filter(assignment=assignment)
+    return render(request, 'classroom/assignment_update.html', {'form': form, 'existing_attachments':existing_attachments})
 @login_required
 def assignment_submit(request, pk):
     if request.method=='POST':

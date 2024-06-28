@@ -133,12 +133,27 @@ def open_classroom(request,pk):
     contents.sort(key = lambda x: x.created_at)
     post_form = PostForm()
     comment_form = CommentCreateForm()
+    teacher = classroom.classroomteachers_set.all()
+    classroom_code = 'Java1'
+
+    # Filter classrooms with the specified classroom_code
+    classrooms2 = Classroom.objects.filter(classroom_code=classroom_code)
+
+    if classrooms2.exists():
+        for classroom1 in classrooms2:
+            users = classroom1.users.all()
+            for user in users:
+                print(user)
+    else:
+        print(f"No classroom found with classroom_code '{classroom_code}'")
 
     context = {
         'classroom' : classroom,
         'contents': reversed(contents),
         'post_form': post_form,
         'comment_form': comment_form,
+        'teachers': classroom.classroomteachers_set.all(),
+        'students': classroom.users.all(),
     }
 
     return render(request, 'classroom/classroom.html', context)
@@ -161,6 +176,7 @@ def members(request, pk):
         'teachers': classroom.classroomteachers_set.all(),
         'students': classroom.users.all(),
     }
+    print(context)
     return render(request, 'classroom/members.html', context)
 @login_required
 def assignment(request):

@@ -47,11 +47,7 @@ INSTALLED_APPS = [
     'users',
     'openforms',
     'comments',
-    'courses',
-    'whiteboard',
     'assignments',
-    'ide',
-    'newsletter',
     'contactus',
     'crispy_forms',
     'sweetify'

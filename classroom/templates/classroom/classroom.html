@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load widget_tweaks %}
-{% load crispy_forms_tags %}
-{% block title %} Home {% endblock title %}
+{% block title %} Classroom {% endblock title %}
 
 
 {% block content %}
@@ -11,15 +10,37 @@
 <link rel="stylesheet" href="{% static 'summernote/summernote-bs4.min.css' %}">
 <script type="text/javascript" src="{% static 'summernote/summernote-bs4.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/summernote_footer.js' %}"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 <link rel="stylesheet" href="{% static 'js/summernote.css' %}">
-
+<style>
+    .image-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .image-list li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .image-list img {
+        border-radius: 50%;
+        margin-right: 15px;
+    }
+    .image-list b {
+        font-size: 1.1em;
+    }
+    .image-list .desc {
+        display: block;
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+</style>
 <head>
     <meta charset="UTF-8">
     <title>Create Tugas</title>
@@ -27,85 +48,109 @@
 </head>
 <!-- ROW -->
 <br><br>
-    <div class="row">
-        <div class="col-12">
-            <div class="card bg-dark shadow p-3 mb-3 bg-white rounded">
-                <img src="{% static 'mainapp/img/undraw_posting_photo.svg' %}" class="card-img" alt="..." style="max-height: 175px; object-fit: cover;">
-                <div class="card-img-overlay d-flex flex-column justify-content-center align-items-start">
-                    <h1 class="card-title text-wrap"><b>{{ classroom.name }}</b></h1>
-                    <p class="card-text text-wrap">{{ classroom.description }}</p>
-                    <div class="input-group mb-3" style="width: 100%; max-width: 300px;">
-                        <input type="text" class="form-control" value="{{ classroom.classroom_code }}" id="classroom-code" readonly>
-                        <button class="btn btn-sm btn-primary" onclick="copyCode()">Copy</button>
-                    </div>
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-dark shadow p-3 mb-3 bg-white rounded">
+            <img src="{% static 'mainapp/img/undraw_posting_photo.svg' %}" class="card-img" alt="..."
+                style="max-height: 175px; object-fit: cover;">
+            <div class="card-img-overlay d-flex flex-column justify-content-center align-items-start">
+                <h1 class="card-title text-wrap"><b>{{ classroom.name }}</b></h1>
+                <p class="card-text text-wrap">{{ classroom.description }}</p>
+                <div class="input-group mb-3" style="width: 100%; max-width: 300px;">
+                    <input type="text" class="form-control" value="{{ classroom.classroom_code }}" id="classroom-code"
+                        readonly>
+                    <button class="btn btn-sm btn-primary" onclick="copyCode()">Copy</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <style>
-        .card-title, .card-text {
-            word-wrap: break-word;
-        }
-    </style>
-    <div class="col-12">
-        <div class="row">
-            <div class="col-lg-3 d-none d-lg-block">
-                <div class="card border">
-                    <div class="card-body">
-                        <h5>Upcoming</h5>
-                        <p class="card-text">Woohoo, no work due soon!</p>
-                        <a class="float-right" href="{% url 'classroom:todo' %}">View all</a>
+<style>
+    .card-title,
+    .card-text {
+        word-wrap: break-word;
+    }
+</style>
+<div class="col-12">
+    <div class="row">
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="card border">
+                <div class="card-body">
+                    <h5>Mendatang</h5>
+                    <p class="card-text">Hore, tidak ada tugas yang perlu segera diselesaikan!</p>
+                    <a class="float-right" href="{% url 'classroom:todo' %}">View all</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <div class="card border">
+                        <div class="card-header text-center">
+                            Team Members
+                        </div>
+                        <div class="card-body">
+                            
+                            <ul class="image-list">
+                                {% for student in students %}
+                                <li>
+                                    <img src="{{ student.profile.image.url }}" alt="img" class="img-fluid" width="50">
+                                    <div>
+                                        <b>{{student}}</b>
+                                        <span class="desc">designer</span>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-9">
-                <!-- ROW -->
-                <div class="row">
-                    <style>
-                        .d-none {
-                            display: none;
-                        }
-                    </style>
-                    <div class="col-12 mb-2">
-                        <div id="clicked-post" class="card shadow-sm">
-                            <div class="card-body">
-                                <img src="{% static 'mainapp/img/undraw_posting_photo.svg' %}" width="30" height="30"
-                                    alt="..." class="rounded-circle mr-2 text-none">
-                                <a class="text-decoration-none" href="#!">Share something with your class</a>
-                            </div>
+        </div>
+        <div class="col-lg-9">
+            <!-- ROW -->
+            <div class="row">
+                <style>
+                    .d-none {
+                        display: none;
+                    }
+                </style>
+                <div class="col-12 mb-2">
+                    <div id="clicked-post" class="card shadow-sm">
+                        <div class="card-body">
+                            <img src="{% static 'mainapp/img/undraw_posting_photo.svg' %}" width="30" height="30"
+                                alt="..." class="rounded-circle mr-2 text-none">
+                            <a class="text-decoration-none" href="#!">Share something with your class</a>
                         </div>
-                        <!-- TEXT AREA -->
                     </div>
-                    <div class="row">
-                        <div class="col-xl-12 col-lg-12 order-lg-2 order-xl-1">
-                            <!-- new post -->
-                            <div class="card">
-                                <div id="post-textarea" class="card shadow-sm d-none">
-                                    <div class="card-body">
-                                        <form action="{% url 'posts:create_post' classroom.pk %}" method="POST"
-                                            enctype="multipart/form-data">
-                                            {% csrf_token %}
-                                            <div class="form-group">
-                                                {{post_form.description}}
-                                            </div>
-                                            <div class="form-group">
-                                                {{ post_form.file_field|attr:"class:basic-filepond look" }}
-                                            </div>
-                                            <button type="submit"
-                                                class="btn btn-sm btn-primary m-1 pl-3 pr-3 float-right">
-                                                Post
-                                            </button>
-                                            <button id="cancel-post"
-                                                class="btn btn-sm btn-outline-dark m-1 float-right">
-                                                Cancel
-                                            </button>
-                                        </form>
-                                    </div>
+                    <!-- TEXT AREA -->
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 order-lg-2 order-xl-1">
+                        <!-- new post -->
+                        <div class="card">
+                            <div id="post-textarea" class="card shadow-sm d-none">
+                                <div class="card-body">
+                                    <form action="{% url 'posts:create_post' classroom.pk %}" method="POST"
+                                        enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            {{post_form.description}}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ post_form.file_field|attr:"class:basic-filepond look" }}
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-primary m-1 pl-3 pr-3 float-right">
+                                            Post
+                                        </button>
+                                        <button id="cancel-post" class="btn btn-sm btn-outline-dark m-1 float-right">
+                                            Cancel
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
-                            {% for content in contents %}
-                            <div class="col-12">
+                        </div>
+                        {% for content in contents %}
+                        <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-start">
@@ -115,23 +160,28 @@
                                         </div>
                                         <div class="w-100">
                                             <h6 class="m-0"><a href="contacts-profile.html"
-                                                class="text-reset">{{content.created_by.username }}</a></h6>
+                                                    class="text-reset">{{content.created_by.username }}</a></h6>
                                             <p class="text-muted"><small>{{ content.created_at }}</small></p>
                                             <div class="dropdown no-arrow float-end">
                                                 <a class="btn btn-circle dropdown-toggle" href="#" role="button"
-                                                id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-dark"></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <li><h6 class="dropdown-header">Dropdown Header:</h6></li>
-                                            <li><a class="dropdown-item" href="#">Action</a></li>
-                                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                                            <li><hr class="dropdown-divider"></li>
-                                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                            </ul>
-                                        </div>                                        
-                                    </div>
+                                                    id="dropdownMenuLink" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-dark"></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end shadow animated--fade-in"
+                                                    aria-labelledby="dropdownMenuLink">
+                                                    <li>
+                                                        <h6 class="dropdown-header">Dropdown Header:</h6>
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#">Action</a></li>
+                                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         {% for resource in content.resources %}
@@ -140,8 +190,10 @@
                                             <div class="card mb-3 ml-2">
                                                 <div class="row no-gutters">
                                                     <div class="col-md-4">
-                                                        <a href="{{ resource.files.url }}" data-fancybox="gallery" data-caption="{{ content.description }}">
-                                                            <img src="{{ resource.files.url }}" class="card-img img-fluid" alt="...">
+                                                        <a href="{{ resource.files.url }}" data-fancybox="gallery"
+                                                            data-caption="{{ content.description }}">
+                                                            <img src="{{ resource.files.url }}"
+                                                                class="card-img img-fluid" alt="...">
                                                         </a>
                                                     </div>
                                                     <div class="col-md-8">
@@ -154,13 +206,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                         {% else %}
                                         <div class="col-6">
                                             <div class="card mb-3">
                                                 <div class="row no-gutters align-items-center">
                                                     <div class="col-md-4 text-center">
-                                                        <a href="{% url 'classroom:assignment_submit' content.pk %}" class="btn btn-primary btn-md">
+                                                        <a href="{% url 'classroom:assignment_submit' content.pk %}"
+                                                            class="btn btn-primary btn-md">
                                                             <small>Lihat Tugas</small>
                                                         </a>
                                                     </div>
@@ -171,7 +224,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                         {% endif %}
                                         {% endfor %}
                                     </div>
@@ -202,13 +255,15 @@
                                 <div class="card-body">
                                     <form action="{% url 'comments:create_comment' content.pk %}" method="post">
                                         <div class="input-group">
-                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35" alt="..." class="rounded-circle ml-2 mr-2">
-                                                {% csrf_token %}
-                                                {{ comment_form.comment_text|attr:"class:form-control rounded-pill"|attr:"placeholder:Add a class comment" }}
-                                                <div class="input-group-append">
-                                                    <button class=" btn btn-circle" type="submit" id="button-addon2"><i class="fas fa-angle-double-right"></i></button>
-                                                </div>
+                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35"
+                                                alt="..." class="rounded-circle ml-2 mr-2">
+                                            {% csrf_token %}
+                                            {{ comment_form.comment_text|attr:"class:form-control rounded-pill"|attr:"placeholder:Add a class comment" }}
+                                            <div class="input-group-append">
+                                                <button class=" btn btn-circle" type="submit" id="button-addon2"><i
+                                                        class="fas fa-angle-double-right"></i></button>
                                             </div>
+                                        </div>
                                     </form>
                                 </div>
                                 {% else %}
@@ -235,13 +290,15 @@
                                 <div class="card-body">
                                     <form action="comment/create/{{content.pk}}" method="post">
                                         <div class="input-group">
-                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35" alt="..." class="rounded-circle ml-2 mr-2">
-                                                {% csrf_token %}
-                                                {{ comment_form.comment_text|attr:"class:form-control rounded-pill"|attr:"placeholder:Add a class comment" }}
-                                                <div class="input-group-append">
-                                                    <button class=" btn btn-circle" type="submit" id="button-addon2"><i class="fas fa-angle-double-right"></i></button>
-                                                </div>
+                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35"
+                                                alt="..." class="rounded-circle ml-2 mr-2">
+                                            {% csrf_token %}
+                                            {{ comment_form.comment_text|attr:"class:form-control rounded-pill"|attr:"placeholder:Add a class comment" }}
+                                            <div class="input-group-append">
+                                                <button class=" btn btn-circle" type="submit" id="button-addon2"><i
+                                                        class="fas fa-angle-double-right"></i></button>
                                             </div>
+                                        </div>
                                     </form>
                                 </div>
                                 {% endif %}
@@ -254,8 +311,9 @@
         </div>
     </div>
 </div>
+</div>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('[data-fancybox="gallery"]').fancybox({
             // Custom options can go here
         });

@@ -68,6 +68,14 @@
                                                     <label for="description">Description</label>
                                                     {{ form.description}}
                                                 </div>
+                                                {% for attachment in existing_attachments %}
+                    <li>
+                        <a href="{{ attachment.files.url }}">{{ attachment.files.name }}</a>
+                        <!-- Optionally, add a delete button here -->
+                    </li>
+                {% empty %}
+                    <li>No attachments.</li>
+                {% endfor %}
                                                 <div class="form-group">
                                                     {{ form.file_field|attr:"class:basic-filepond look" }}
                                                 </div>

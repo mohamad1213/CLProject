@@ -3,12 +3,12 @@
       <ul>
         <li class="menu-item">
           <a href="{% url 'classroom:dashboard' %}" class='menu-link'>
-            <span><i class="bi bi-grid-fill"></i> Dashboard</span>
+            <span><i class="bi bi-grid-fill"></i> Beranda</span>
           </a>
         </li>
         <li class="menu-item">
           <a href="{% url 'classroom:home' %}" class='menu-link'>
-            <span><i class="bi bi-stack"></i> Classrom</span>
+            <span><i class="bi bi-stack"></i> Kelas</span>
           </a>
         </li>
         {% for u in request.user.groups.all %}
@@ -21,27 +21,14 @@
         {% elif u.name == 'guru' %}
         <li class="menu-item">
           <a href="{% url 'classroom:assignment' %}" class='menu-link'>
-            <span><i class="bi bi-stack"></i> Buat Tugas</span>
+            <span><i class="bi bi-stack"></i> Manajemen Tugas</span>
           </a>
         </li>
         <li class="menu-item">
           <a href="{% url 'classroom:toreview' %}" class='menu-link'>
-            <span><i class="bi bi-stack"></i> Review</span>
+            <span><i class="bi bi-stack"></i> Tinjau</span>
           </a>
         </li>
-        <li class="menu-item">
-          <a href="{% url 'posts:student_report_list' %}" class='menu-link'>
-            <span><i class="bi bi-stack"></i> Laporan dan Raport</span>
-          </a>
-        </li>
-        {% if 'open' in request.path %}
-        <li class="menu-item">
-          <a class="menu-link" href="{% url 'classroom:classwork' classroom.pk %}">
-            <i class="fas fa-fw fa-folder"></i>
-            <span>Classworks</span>
-          </a>
-        </li>
-        {% endif %}
         {% endif %}
         {% endfor %}
       </ul>

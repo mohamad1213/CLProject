@@ -17,6 +17,7 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+        
     
     @property
     def resources(self):
@@ -29,7 +30,9 @@ class Post(models.Model):
     @property
     def post_comment(self):
         return list(self.comment_set.all())
-
+    @property
+    def post_comment_count(self):
+        return self.comment_set.count()
 
 class Assignment(models.Model):
     onprogress= 'onprogress'

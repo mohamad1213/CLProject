@@ -25,7 +25,7 @@ from . import views
 
 
 urlpatterns = [
-    path('comments', include('comments.urls')),
+    path('comments/', include('comments.urls')),
     path('admin/', admin.site.urls),
     path('',include('classroom.urls')),
     # path('', views.landing, name='landing-page'),

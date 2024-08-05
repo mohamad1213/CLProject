@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load widget_tweaks %}
+{% load custom_filters %}
+
 {% block title %} Classroom {% endblock title %}
 
 
@@ -10,10 +12,8 @@
 <link rel="stylesheet" href="{% static 'summernote/summernote-bs4.min.css' %}">
 <script type="text/javascript" src="{% static 'summernote/summernote-bs4.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/summernote_footer.js' %}"></script>
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
@@ -40,6 +40,9 @@
         font-size: 0.9em;
         color: #6c757d;
     }
+    .moretext {
+            display: none;
+        }
 </style>
 <head>
     <meta charset="UTF-8">
@@ -56,11 +59,16 @@
             <div class="card-img-overlay d-flex flex-column justify-content-center align-items-start">
                 <h1 class="card-title text-wrap"><b>{{ classroom.name }}</b></h1>
                 <p class="card-text text-wrap">{{ classroom.description }}</p>
+                {% for u in request.user.groups.all %}
+                {% if u.name == 'guru' %}
                 <div class="input-group mb-3" style="width: 100%; max-width: 300px;">
                     <input type="text" class="form-control" value="{{ classroom.classroom_code }}" id="classroom-code"
-                        readonly>
+                    readonly>
                     <button class="btn btn-sm btn-primary" onclick="copyCode()">Copy</button>
                 </div>
+                {% else %}
+                {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -155,14 +163,14 @@
                                 <div class="card-body">
                                     <div class="d-flex align-items-start">
                                         <div class="d-flex flex-row">
-                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35"
+                                            <img src="{{ content.created_by.profile.image.url }}" width="35" height="35"
                                                 alt="..." class="rounded-circle mr-4" style="margin-right: 10px;">
                                         </div>
                                         <div class="w-100">
                                             <h6 class="m-0"><a href="contacts-profile.html"
-                                                    class="text-reset">{{content.created_by.username }}</a></h6>
-                                            <p class="text-muted"><small>{{ content.created_at }}</small></p>
-                                            <div class="dropdown no-arrow float-end">
+                                                    class="text-reset">{{content.created_by.get_full_name }}</a></h6>
+                                            <p class="text-muted"><small>{{ content.created_at|date:"d F Y, H:i"}}</small></p>
+                                            <!-- <div class="dropdown no-arrow float-end">
                                                 <a class="btn btn-circle dropdown-toggle" href="#" role="button"
                                                     id="dropdownMenuLink" data-bs-toggle="dropdown"
                                                     aria-expanded="false">
@@ -180,7 +188,7 @@
                                                     </li>
                                                     <li><a class="dropdown-item" href="#">Something else here</a></li>
                                                 </ul>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="row">
@@ -189,11 +197,10 @@
                                         <div class="col-md-12">
                                             <div class="card mb-3 ml-2">
                                                 <div class="row no-gutters">
+                                                    {% if resource.files.url|is_image %}
                                                     <div class="col-md-4">
-                                                        <a href="{{ resource.files.url }}" data-fancybox="gallery"
-                                                            data-caption="{{ content.description }}">
-                                                            <img src="{{ resource.files.url }}"
-                                                                class="card-img img-fluid" alt="...">
+                                                        <a href="{{ resource.files.url }}" data-fancybox="gallery" data-caption="{{ content.description }}">
+                                                            <img src="{{ resource.files.url }}" class="card-img img-fluid" alt="...">
                                                         </a>
                                                     </div>
                                                     <div class="col-md-8">
@@ -204,34 +211,88 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    {% else %}
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-5">
+                                                                <a href="{{ resource.files.url }}" download>
+                                                                    <div class="card" style="background-color: #F8E3FE;">
+                                                                        <div class="card-body">
+                                                                            <div class="row">
+                                                                                <div class="col-md-4">
+                                                                                    <button type="button" class="btn" style="color: #C900FB; border-radius: 10px; outline-color: #C900FB; border: 2px; outline-style: solid;">
+                                                                                        <i class="bi bi-filetype-pdf btn-primary fa-2x"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <p>{{ resource.filename }}</p>
+                                                                                    <span class="badge text-bg-secondary">{{ resource.files.size|filesizeformat }}</span>
+                                                                                </div>
+                                                                                <div class="col-md-2">
+                                                                                    <br><br>
+                                                                                    <i class="bi bi-download" style="color: #C900FB;"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
                                                 </div>
                                             </div>
                                         </div>
                                         {% else %}
-                                        <div class="col-6">
-                                            <div class="card mb-3">
+                                        <div class="col-10">
+                                            <div class="card">
                                                 <div class="row no-gutters align-items-center">
-                                                    <div class="col-md-4 text-center">
-                                                        <a href="{% url 'classroom:assignment_submit' content.pk %}"
-                                                            class="btn btn-primary btn-md">
-                                                            <small>Lihat Tugas</small>
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <div class="card-body">
-                                                            <h6 class="card-title mb-1">{{ content.title }}</h6>
-                                                        </div>
-                                                    </div>
+                                                    <h5>{{content.title}}</h5>
+                                                    <br>
+                                                    <span class="shorttext">{{ content.description|safe|truncatechars:100 }}</span>
+                                                    <a href="{% url 'classroom:assignment_submit' content.pk %}" class="morelink">Selengkapnya</a>
+                                                    
+                                                    <!-- <p class="card-title mb-1s" style="text-align: justify;">{{ content.description|safe }}</p> -->
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="container">
+
+                                            <!-- Outer row -->
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <a href="{{ resource.files.url }}" download>
+                                                    <div class="card" style="background-color: #F8E3FE;">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <button type="button" class="btn" style="color: #C900FB; border-radius: 10px; outline-color: #C900FB; border: 2px; outline-style: solid;">
+                                                                        <i class="bi bi-filetype-pdf btn-primary fa-2x"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <p>{{ resource.filename }}</p>
+                                                                    <span class="badge text-bg-secondary">{{ resource.files.size|filesizeformat }}</span>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <br>
+                                                                    <br>
+                                                                    <i class="bi bi-download" style="color: #C900FB;"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                          </div> 
                                         {% endif %}
                                         {% endfor %}
                                     </div>
                                 </div>
                                 <hr style="border: none; border-top: 1px solid #525050;">
                                 {% if content.content_type == 'post' %}
-                                <hr>
+                                <!-- <hr> -->
                                 <div class="card-body">
                                     {% for comment in content.post_comment %}
                                     <div class="d-flex align-items-start">
@@ -241,8 +302,8 @@
                                         </div>
                                         <div class="w-100 mt-2">
                                             <h6 class="mt-0"><a href="contacts-profile.html"
-                                                    class="text-reset">{{comment.user }}</a>
-                                                <small class="text-muted">{{ comment.created_at }}</small>
+                                                    class="text-reset">{{comment.user.get_full_name }}</a>
+                                                <small class="text-muted">{{ comment.created_at|date:"d F Y, H:i"  }}</small>
                                             </h6>
                                             <p>
                                                 {{ comment.comment_text|safe}}
@@ -252,43 +313,9 @@
                                     </div>
                                     {% endfor %}
                                 </div>
+
                                 <div class="card-body">
                                     <form action="{% url 'comments:create_comment' content.pk %}" method="post">
-                                        <div class="input-group">
-                                            <img src="{{ request.user.profile.image.url }}" width="35" height="35"
-                                                alt="..." class="rounded-circle ml-2 mr-2">
-                                            {% csrf_token %}
-                                            {{ comment_form.comment_text|attr:"class:form-control rounded-pill"|attr:"placeholder:Add a class comment" }}
-                                            <div class="input-group-append">
-                                                <button class=" btn btn-circle" type="submit" id="button-addon2"><i
-                                                        class="fas fa-angle-double-right"></i></button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                {% else %}
-                                <div class="card-body">
-                                    {% for comment in content.post_comment %}
-                                    <div class="d-flex align-items-start mb-3">
-                                        <div class="d-flex flex-row">
-                                            <img src="{{ comment.user.profile.image.url }}" width="35" height="35"
-                                                alt="..." class="rounded-circle mr-4" style="margin-right: 10px;">
-                                        </div>
-                                        <div class="w-100 mt-2">
-                                            <h6 class="mt-0"><a href="contacts-profile.html"
-                                                    class="text-reset">{{comment.user }}</a>
-                                                <small class="text-muted">{{ comment.created_at }}</small>
-                                            </h6>
-                                            <p>
-                                                {{ comment.comment_text|safe}}
-                                            </p>
-                                            <br>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                <div class="card-body">
-                                    <form action="comment/create/{{content.pk}}" method="post">
                                         <div class="input-group">
                                             <img src="{{ request.user.profile.image.url }}" width="35" height="35"
                                                 alt="..." class="rounded-circle ml-2 mr-2">
@@ -358,62 +385,25 @@
             console.error(error);
         });
 </script>
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Initialize CKEditor for the content field
-        CKEDITOR.replace('id_content');
-
-        // Audio recording functionality
-        const startRecordButton = document.createElement('button');
-        startRecordButton.textContent = "Start Recording";
-        const stopRecordButton = document.createElement('button');
-        stopRecordButton.textContent = "Stop Recording";
-        stopRecordButton.classList.add('d-none');
-
-        const audioInput = document.createElement('input');
-        audioInput.type = 'file';
-        audioInput.name = 'voice_note';
-        audioInput.classList.add('d-none');
-
-        const form = document.querySelector('form');
-        form.appendChild(startRecordButton);
-        form.appendChild(stopRecordButton);
-        form.appendChild(audioInput);
-
-        let mediaRecorder;
-        let audioChunks = [];
-
-        startRecordButton.addEventListener('click', async () => {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.start();
-            mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
-
-            startRecordButton.classList.add('d-none');
-            stopRecordButton.classList.remove('d-none');
-        });
-
-        stopRecordButton.addEventListener('click', () => {
-            mediaRecorder.stop();
-            mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const audioUrl = URL.createObjectURL(audioBlob);
-                const audio = new Audio(audioUrl);
-                audio.controls = true;
-                form.appendChild(audio);
-
-                // Create a file from the audio blob
-                const file = new File([audioBlob], "voice_note.wav", { type: 'audio/wav' });
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                audioInput.files = dataTransfer.files;
-            };
-
-            startRecordButton.classList.remove('d-none');
-            stopRecordButton.classList.add('d-none');
-        });
-    });
-</script> -->
-<!-- ROW END -->
-
+  <script>
+    function copyCode() {
+      // Get the input field
+      var copyText = document.getElementById("classroom-code");
+  
+      // Select the text field
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // For mobile devices
+  
+      // Copy the text inside the text field
+      document.execCommand("copy");
+  
+      // Show SweetAlert notification
+      Swal.fire({
+        title: 'Success!',
+        text: 'Copied the code: ' + copyText.value,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+  </script>
 {% endblock content %}

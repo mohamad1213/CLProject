@@ -18,14 +18,13 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <p class="text-subtitle text-muted">A sortable, searchable, paginated table without
-                        dependencies thanks to simple-datatables.</p>
+                    <p class="text-subtitle text-muted">Optimalisasi Penugasan dan Pelacakan Kinerja.</p>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Kelas</li>
+                            <li class="breadcrumb-item"><a href="/">Beranda</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Manajemen Tugas</li>
                         </ol>
                     </nav>
                 </div>
@@ -48,9 +47,9 @@
                                     <th>Judul</th>
                                     <th>Guru</th>
                                     <th>Topic</th>
-                                    <th>Deadline</th>
+                                    <th>Tenggat Waktu</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,9 +62,9 @@
                                     <td>{{ u.due_date|date:"d F Y, H:i" }}</td>
                                     <td>
                                         {% if u.status == 'completed' %}
-                                        <span class="badge bg-success">Completed</span>
+                                        <span class="badge bg-success">Selesai</span>
                                         {% else %}
-                                        <span class="badge bg-warning">On Progress</span>
+                                        <span class="badge bg-warning">Sedang proses</span>
                                         {% endif %}
                                     </td>
                                     <td>

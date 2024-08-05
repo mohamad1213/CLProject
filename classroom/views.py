@@ -12,77 +12,214 @@ from .models import Classroom,Topic,ClassroomTeachers
 from posts.models import Assignment,SubmittedAssignment,AssignmentFile, Attachment
 from .forms import ClassroomCreationForm,JoinClassroomForm, PostForm, AssignmentFileForm, AssignmentCreateForm
 from comments.forms import CommentCreateForm, PrivateCommentForm
+from comments.models import PrivateComment
 import pytz
 from django.contrib.auth.models import User, Group
+from django.db.models import Count, Q
+from collections import defaultdict
+from users.models import Profile
+from django.http import JsonResponse
+import json
+from calendar import month_name
 now_utc = timezone.now()
 tz_indonesia = pytz.timezone('Asia/Jakarta')
 now_indonesia = now_utc.astimezone(tz_indonesia)
+import random
+
+def tentang(request):
+    return render(request, 'classroom/tentang.html')
+def get_random_color():
+    colors = [
+        '#FF5733', '#33FF57', '#3357FF', '#F333FF', '#33FFF5',
+        '#F5FF33', '#FF33A2', '#A233FF', '#33FFB8', '#FFC733'
+    ]
+    return random.choice(colors)
+
 @login_required
 def home(requests):
     teaching_classes = set([classroom.classroom for classroom in requests.user.classroomteachers_set.all()])
     classrooms = set(requests.user.classroom_set.all()).union(teaching_classes)
     classroom_form = ClassroomCreationForm()
+    classroom_colors = {classroom: get_random_color() for classroom in classrooms}
     join_classroom_form = JoinClassroomForm()
     
     context = {
         'classrooms' : classrooms,
         'classroom_form': classroom_form,
-        'join_classroom_form':join_classroom_form
+        'join_classroom_form':join_classroom_form,
+        'classroom_colors': classroom_colors
     }
     return render(requests, 'classroom/home.html', context)
 @login_required
-def dashboard(requests):
-    teaching_classes = set([classroom.classroom for classroom in requests.user.classroomteachers_set.all()])
-    classrooms = set(requests.user.classroom_set.all()).union(teaching_classes)
+def get_discussion_activity(request):
+    # Menghitung jumlah post dan komentar untuk setiap bulan
+    monthly_counts = {
+        "Jan": {"posts": 0, "comments": 0},
+        "Feb": {"posts": 0, "comments": 0},
+        "Mar": {"posts": 0, "comments": 0},
+        "Apr": {"posts": 0, "comments": 0},
+        "May": {"posts": 0, "comments": 0},
+        "Jun": {"posts": 0, "comments": 0},
+        "Jul": {"posts": 0, "comments": 0},
+        "Aug": {"posts": 0, "comments": 0},
+        "Sep": {"posts": 0, "comments": 0},
+        "Oct": {"posts": 0, "comments": 0},
+        "Nov": {"posts": 0, "comments": 0},
+        "Dec": {"posts": 0, "comments": 0},
+    }
+    
+    # Ambil post pengguna yang terbaru
+    latest_posts = Post.objects.filter(created_by=request.user, created_at__year=timezone.now().year).order_by('-created_at')
+    
+    for post in latest_posts:
+        month = post.created_at.strftime("%b")
+        monthly_counts[month]["posts"] += 1
+        monthly_counts[month]["comments"] += post.post_comment_count
+    
+    # Format data untuk JSON response
+    months = list(monthly_counts.keys())
+    posts_data = [monthly_counts[month]["posts"] for month in months]
+    comments_data = [monthly_counts[month]["comments"] for month in months]
+    
+    data = {
+        'months': months,
+        'posts_data': posts_data,
+        'comments_data': comments_data,
+    }
+    
+    return JsonResponse(data)
+@login_required
+def get_monthly_discussion_activity(request):
+    # Inisialisasi data untuk menyimpan jumlah post dan komentar per bulan
+    monthly_activity = []
+
+    # Mengambil daftar nama-nama bulan dalam bahasa Inggris
+    months = list(month_name)[1:]
+
+    # Iterasi untuk setiap bulan dalam setahun
+    for month in range(1, 13):
+        # Mengambil posts yang dibuat pada bulan dan tahun tertentu
+        posts = Post.objects.filter(created_by=request.user, created_at__month=month, created_at__year=timezone.now().year)
+        
+        # Menghitung jumlah posts
+        posts_count = posts.count()
+
+        # Menghitung jumlah komentar untuk semua posts pada bulan tersebut
+        comments_count = sum(post.comment_set.count() for post in posts)
+
+        # Menambahkan data ke dalam list
+        monthly_activity.append({
+            'month': months[month - 1],  # Mendapatkan nama bulan berdasarkan indeks
+            'posts_count': posts_count,
+            'comments_count': comments_count,
+        })
+
+    # Mengembalikan data dalam format JSON
+    return JsonResponse(monthly_activity, safe=False)
+@login_required
+def get_gender_data(request):
+    gender_data = Profile.objects.values('gender').annotate(count=Count('gender'))
+    
+    gender_counts = {
+        'M': 0,
+        'F': 0,
+    }
+    
+    for data in gender_data:
+        gender_counts[data['gender']] = data['count']
+    print(gender_counts)
+
+    return JsonResponse(gender_counts)
+@login_required
+def dashboard(request):
+    teaching_classes = set([classroom.classroom for classroom in request.user.classroomteachers_set.all()])
+    classrooms = set(request.user.classroom_set.all()).union(teaching_classes)
     total_classrooms = len(classrooms)
-    user = User.objects.get(username=requests.user)
+
+    classrooms_with_user_count = Classroom.objects.annotate(total_users=Count('users'))
+    group_siswa_classrooms = classrooms_with_user_count.filter(users__groups__name='siswa').distinct().count()
+
+    # Dictionary untuk menyimpan profil user dan classrooms mereka
+    siswa_group = Group.objects.get(name='siswa')
+    latest_users = User.objects.filter(groups=siswa_group).order_by('-date_joined')[:10]
+
+    user_profiles = []
+    for user in latest_users:
+        classrooms = user.classroom_set.all()
+        classroom_names = [classroom.name for classroom in classrooms]
+
+        try:
+            profile_image = user.profile.image.url if user.profile.image else None
+        except AttributeError:
+            profile_image = None
+
+        user_info = {
+            "nama": user.username,
+            "gambar": profile_image,
+            "classrooms": classroom_names
+        }
+        user_profiles.append(user_info)
+    user_classrooms = request.user.classroom_set.all()
+
+    # Jika pengguna tidak memiliki kelas yang diikuti, atur latest_posts kosong
+    if not user_classrooms.exists():
+        latest_posts = []
+    else:
+        user_topics = Topic.objects.filter(classroom__in=user_classrooms)
+        # Filter postingan-postingan yang terkait dengan kelas-kelas yang diikuti pengguna
+        # latest_posts = Post.objects.filter(topic__in=user_topics).select_related('created_by').prefetch_related('comment_set').order_by('-created_at')[:5]
+        
+    latest_posts = Post.objects.filter(created_by=request.user).select_related('created_by').prefetch_related('comment_set').order_by('-created_at')[:5]
+    siswa_group = Group.objects.get(name="siswa")
+    
+    # Dapatkan semua pengguna yang ada dalam grup "siswa"
+    siswa_users = User.objects.filter(groups=siswa_group)
+    recent_comments_private = PrivateComment.objects.filter(user__in=siswa_users).select_related('user', 'assignment').order_by('-created_at')[:5]
+    print(recent_comments_private)
+    user = User.objects.get(username=request.user)
     total_posting = Post.objects.filter(created_by=user).count()
-    total_submit = SubmittedAssignment.objects.filter(user=requests.user, status='completed').count()
+    total_submit = SubmittedAssignment.objects.filter(user=request.user, status='completed').count()
     total_tugas_guru = Assignment.objects.count()
+
     all_assignments = []
     for classroom in classrooms:
         assignments = Assignment.objects.filter(topic__classroom=classroom)
         all_assignments.extend(assignments)
-    classrooms = requests.user.classroom_set.all()
+
+    classrooms = request.user.classroom_set.all()
     topics = []
     for classroom in classrooms:
         topics.extend(list(classroom.topic_set.all()))
+
     assignments = []
     for topic in topics:
         assignments.extend(list(topic.assignment_set.all()))
+
     completed_assignments = []  # List for completed assignments
     pending_assignments = []  # List for pending (in progress) assignments
     for assignment in assignments:
-        submitted_assignment = assignment.submittedassignment_set.filter(user=requests.user).first()
-        if submitted_assignment:
-            status = submitted_assignment.status
-            if status == 'completed':
-                completed_assignments.append(assignment)
-            else:
-                pending_assignments.append(assignment)
-        else:
+        if not assignment.is_turnedin(request.user):
             pending_assignments.append(assignment)
-    all_classrooms = Classroom.objects.all()
 
-# Menghitung total siswa dari semua kelas
-    total_students = User.objects.filter(users__in=all_classrooms).count()
-
-    total_tugas_siswa = len(pending_assignments)
+    total_tugas = SubmittedAssignment.objects.filter(user=request.user, status='completed').count()
     comment = Comment.objects.filter(user=user)
-    total_tugas = SubmittedAssignment.objects.filter(user=requests.user, status='completed').count()
+
     context = {
-        'total_classrooms' : total_classrooms,
-        'total_submit' : total_submit,
-        'total_posting' : total_posting,
-        'total_tugas_guru' : total_tugas_guru,
-        'total_tugas_siswa' : total_tugas_siswa,
-        'total_tugas' : total_tugas,
-        'comment' : comment,
-        'recent_task' : pending_assignments,
-        'total_siswa' : pending_assignments,
+        'total_classrooms': total_classrooms,
+        'total_submit': total_submit,
+        'total_posting': total_posting,
+        'total_tugas_guru': total_tugas_guru,
+        'total_tugas': total_tugas,
+        'comment': comment,
+        'recent_task': pending_assignments,
+        'total_siswa': pending_assignments,
+        'total_student': group_siswa_classrooms,
+        'user_profiles': user_profiles,
+        'latest_posts':latest_posts,
+        'recent_comments_private':recent_comments_private,
     }
-    print(total_students)
-    return render(requests, 'classroom/beranda.html', context)
+
+    return render(request, 'classroom/beranda.html', context)
 @login_required
 def create_classroom(request):
     if request.method == 'POST':
@@ -98,10 +235,10 @@ def create_classroom(request):
             topic.save()
             classroom_teachers = ClassroomTeachers(classroom = classroom, teacher=request.user)
             classroom_teachers.save()
-            sweetify.success(request, f'Classroom {name} created !')
+            sweetify.success(request, f'Kelas {name} Berhasil dibuat !')
             return redirect('/classroom/')
         else:
-            sweetify.error(request, f'Classroom Could not be created :(')
+            sweetify.error(request, f'Kelas tidak dapat dibuat :(')
             sweetify.error(request, form.errors)
     return redirect('classroom:home')
 
@@ -113,12 +250,13 @@ def join_classroom(request):
         if form.is_valid(): 
             classroom = Classroom.objects.filter(classroom_code = form.cleaned_data.get('code')).first()
             if classroom:
+                classroom.users.add(request.user)
                 request.user.classroom_set.add(classroom)
-                sweetify.success(request, f'You are added in {classroom.name}')
+                sweetify.success(request, f'Anda telah ditambahkan {classroom.name}')
             else:
-                sweetify.success(request, f'Error adding you to the classroom')
+                sweetify.error(request, f'Terjadi kesalahan saat menambahkan Anda ke dalam kelas')
         else:
-            sweetify.success(request, f'Error adding you to the classroom')
+            sweetify.success(request, f'Berhasil menambahkan Anda ke dalam kelas')
     return redirect('classroom:home')
 
 @login_required
@@ -134,18 +272,6 @@ def open_classroom(request,pk):
     post_form = PostForm()
     comment_form = CommentCreateForm()
     teacher = classroom.classroomteachers_set.all()
-    classroom_code = 'Java1'
-
-    # Filter classrooms with the specified classroom_code
-    classrooms2 = Classroom.objects.filter(classroom_code=classroom_code)
-
-    if classrooms2.exists():
-        for classroom1 in classrooms2:
-            users = classroom1.users.all()
-            for user in users:
-                print(user)
-    else:
-        print(f"No classroom found with classroom_code '{classroom_code}'")
 
     context = {
         'classroom' : classroom,
@@ -157,6 +283,17 @@ def open_classroom(request,pk):
     }
 
     return render(request, 'classroom/classroom.html', context)
+def update_classroom(request, pk):
+    classroom = get_object_or_404(Classroom, pk=pk)
+    if request.method == 'POST':
+        form = ClassroomCreationForm(request.POST, instance=classroom)
+        if form.is_valid():
+            form.save()
+            return redirect('classroom:home', pk=classroom.pk)
+    else:
+        form = ClassroomCreationForm(instance=classroom)
+    return render(request, 'classroom/home.html', {'cok': form})
+
 @login_required
 def view_document(request, document_id):
     document = Post.objects.get(id=document_id)
@@ -170,8 +307,8 @@ def delete_classroom(requests):
 
 
 @login_required
-def members(request, pk):
-    classroom = get_object_or_404(Classroom, pk=pk)
+def members(request, classroom_code):
+    classroom = get_object_or_404(Classroom, classroom=classroom_code)
     context = {
         'teachers': classroom.classroomteachers_set.all(),
         'students': classroom.users.all(),
@@ -181,7 +318,7 @@ def members(request, pk):
 @login_required
 def assignment(request):
     assignment = Assignment.objects.all()
-    completed_tasks_count = Assignment.objects.filter(status='completed', due_date__lte=now_indonesia).count()
+    completed_tasks_count = Assignment.objects.filter(status='selesai', due_date__lte=now_indonesia).count()
     onprogress_tasks_count = Assignment.objects.filter(status=Assignment.onprogress, due_date__lte=now_indonesia).count()
     print(f"Assignment {completed_tasks_count}: status={onprogress_tasks_count}")
     context = {
@@ -244,7 +381,7 @@ def assignment_update(request, pk):
             assignment.description = form.cleaned_data['description']
             assignment.topic = topic
             assignment.due_date = due_date
-            assignment.marks = form.cleaned_data['point']
+            assignment.marks = form.cleaned_data['points']
             assignment.status = status
             assignment.save()
 
@@ -308,7 +445,7 @@ def turnin(request,pk):
         if not submitted_assignment:
             submitted_assignment = SubmittedAssignment.objects.create(assignment = assignment, user = request.user)
         submitted_assignment.turned_in = True 
-        submitted_assignment.status = 'completed'
+        submitted_assignment.status = 'Selesai'
         submitted_assignment.save()
         sweetify.success(request, f'Tugas telah diselesaikan')
         return redirect('classroom:assignment_submit', pk)
@@ -338,29 +475,19 @@ def unsubmit_file(request, pk):
 
 @login_required
 def todo(request):
-    submitted_assignments = SubmittedAssignment.objects.filter(user=request.user)
+    submitted_assignments = SubmittedAssignment.objects.filter(user=request.user).order_by('-id')
     classrooms = request.user.classroom_set.all()
     topics = []
     for classroom in classrooms:
         topics.extend(list(classroom.topic_set.all()))
     assignments = []
     for topic in topics:
-        assignments.extend(list(topic.assignment_set.all()))
+        assignments.extend(list(topic.assignment_set.all().order_by('-id')))
     filtered_assignments = []
-    # for assignment in assignments:
-    #     if not assignment.is_turnedin(request.user):
-    #         filtered_assignment.append(assignment)
     for assignment in assignments:
-        submitted_assignment = assignment.submittedassignment_set.filter(user=request.user).first()
-        if submitted_assignment:
-            status = submitted_assignment.status
-        else:
-            status = 'pending'
-        filtered_assignments.append({
-            'assignment': assignment,
-            'status': status
-        })
-    context = {'assignments': filtered_assignments}
+        if not assignment.is_turnedin(request.user):
+            filtered_assignments.append(assignment)
+    context = {'assignments': filtered_assignments,'submitted_assignments':submitted_assignments}
     return render(request, 'classroom/todo.html', context)
 
 

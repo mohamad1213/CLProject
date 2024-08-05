@@ -8,10 +8,15 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
+    GENDER_CHOICES = [
+        ('M', 'Laki-laki'),
+        ('F', 'Perempuan'),
+    ]
+    gender = forms.ChoiceField(choices=GENDER_CHOICES, required=True)
 
     class Meta:
         model = User
-        fields= ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
+        fields= ['first_name', 'last_name', 'username', 'email', 'password1', 'password2','gender']
 
 
 class UserUpdateForm(forms.ModelForm):

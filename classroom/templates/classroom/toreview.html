@@ -26,7 +26,7 @@
           <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Kelas</li>
+              <li class="breadcrumb-item active" aria-current="page">Tinjau Tugas</li>
             </ol>
           </nav>
         </div>
@@ -52,7 +52,7 @@
                 <tr>
                   <td>{{ forloop.counter }}</td>
                   <td>{{ u.title }}</td>
-                  <td>{{ u.created_at }}</td>
+                  <td>{{ u.created_at|date:"d F Y, H:i"  }}</td>
                   <td>{{ u.total_turned_in }}</td>
                   <td>{{ u.total_missing }}</td>
                   <td>

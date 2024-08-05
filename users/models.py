@@ -12,6 +12,7 @@ def user_profile_pic_path(instance, filename):
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete = models.CASCADE)
     image = models.ImageField(default = 'users/profile_pics/default.png', upload_to=user_profile_pic_path)
+    gender = models.CharField(max_length=1, choices=[('M', 'Laki-laki'), ('F', 'Perempuan')])
 
     def __str__(self):
         return f'{self.user.username} Profile'

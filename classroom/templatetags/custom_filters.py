@@ -28,3 +28,13 @@ def format_to_wib(date_str):
         return formatted_date_time
     except Exception as e:
         return str(e)
+from django import template
+
+register = template.Library()
+
+@register.filter(name='is_image')
+def is_image(file_url):
+    if file_url:
+        file_ext = file_url.lower().split('.')[-1]
+        return file_ext in ['jpg', 'jpeg', 'png', 'gif']
+    return False

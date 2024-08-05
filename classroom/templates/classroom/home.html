@@ -12,77 +12,109 @@
     </a>
 </header>
 <div class="page-heading">
-    <h3>Classroom</h3>
+    <h3>Nama Classroom</h3>
 </div>
 <div class="page-content">
     <div class="page-heading">
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <p class="text-subtitle text-muted">A sortable, searchable, paginated table without
-                        dependencies thanks to simple-datatables.</p>
+                    {% for u in request.user.groups.all %}
+                    {% if u.name == 'guru' %}
+                    <a style="border-radius: 10px;" class="btn btn-md btn-primary shadow-md mb-3" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalCenter" href="#">
+                        <i class="bi bi-plus-circle" style="margin-right: 10px;"></i>Buat Kelas Baru
+                    </a>
+                    {% elif u.name == 'siswa' %}
+                    <div class="dropdown-divider"></div>
+                    <a style="border-radius: 10px;" class="btn btn-md btn-primary shadow-md mb-3" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal" href="#">
+                        <i class="bi bi-plus-circle" style="margin-right: 10px;"></i>Masuk Kelas Baru
+                    </a>
+                    {% endif %}
+                    {% endfor %}
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="/">Beranda</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Kelas</li>
                         </ol>
                     </nav>
                 </div>
             </div>
         </div>
+        <style>
+            .card-centered {
+                margin: 10px;
+            }
+        </style>
         <section class="section">
-            {% for u in request.user.groups.all %}
             <div class="card">
-                <div class="card-header">
-                    <div class="card-body">
-                        {% if u.name == 'guru' %}
-                        <a class="btn btn-sm btn-primary shadow-md mb-3" data-bs-toggle="modal"
-                            data-bs-target="#exampleModalCenter" href="#">
-                            Create Classroom
-                        </a>
-                        {% elif u.name == 'siswa' %}
-                        <div class="dropdown-divider"></div>
-                        <a style="float: left;" class="btn btn-md btn-primary shadow-sm mb-3"
-                            data-bs-toggle="modal" data-bs-target="#exampleModal" href="#">
-                            Join Classroom
-                        </a>
-                    </div>
-                </div>
-                {% endif %}
-                {% endfor %}
-                <!-- ROW  -->
-                <!-- Page Heading -->
-
-                <div class="row">
+                <div class="row card-centered">
                     <!-- COL -->
                     {% for classroom in classrooms %}
                     <div class="col-lg-3 col-md-4 col-sm-1">
                         <!-- CARD -->
                         <div class="card border-bottom-primary shadow mb-4">
                             <div class="card-header py-3">
-                                <a href="{% url 'classroom:open_classroom' classroom.id %}">
-                                    <h6 class="m-0 font-weight-bold text-primary">{{ classroom.name }}</h6>
-                                </a>
-                            </div>
-                            <a href="{% url 'classroom:open_classroom' classroom.id %}">
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                            src="{% static 'mainapp/img/undraw_posting_photo.svg' %}" alt="">
-                                    </div>
-                                    <p class="text-secondary">{{ classroom.description }}</p>
+                                <i class="bi bi-building fa-4x"></i>
+                                <div class="dropdown no-arrow float-end">
+                                    <a class="btn btn-circle dropdown-toggle" href="#" role="button"
+                                        id="dropdownMenuLink" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-dark"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow animated--fade-in"
+                                        aria-labelledby="dropdownMenuLink">
+                                        <li>
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#update_classroom" href="#">Edit Classroom
+                                            </a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="#">Hapus</a></li>
+                                    </ul>
                                 </div>
-                            </a>
+                                <h6 class="m-0 font-weight-bold">{{ classroom.name }}</h6>
+                                <p class="text-secondary">{{ classroom.description }}</p>
+                                <hr>
+                                <div class="text-center">
+                                    <a style="color: black; font-weight: bold;"
+                                        href="{% url 'classroom:open_classroom' classroom.id %}"> Lihat Kelas <i
+                                            class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <!-- END CARD -->
                     </div>
                     <!-- END COL -->
+                    <div class="modal fade" id="update_classroom" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="update_classroom">Lihat Classroom</h5>
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/classroom/{{classroom.id}}/update/" method="POST">
+                                        {% load crispy_forms_tags %}
+                                        {% csrf_token %}
+                                        {{ cok }}
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update Classroom</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
                 </div>
                 <!-- END ROW -->
-
                 <!-- Modal Create Class -->
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -108,14 +140,13 @@
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary">Create Classroom</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-
                 <!-- Modal Join Class -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

@@ -4,7 +4,7 @@
 <div class="header-top">
   <div class="container">
     <div class="logo">
-      <a href="/"><img src="{% static 'vendor/assets/compiled/svg/logo.svg' %}" alt="Logo"></a>
+        <a href="/"><img src="{% static 'mainapp/img/logo.png' %}" style="height: 70px; width: 70px;" alt="Logo"></a>
     </div>
     <div class="header-top-right">
       <div class="topbar-divider d-none d-sm-block"></div>
@@ -20,8 +20,8 @@
           </div>
         </a>
         <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="topbarUserDropdown">
-          <li><a class="dropdown-item" href="{% url 'users:profile' %}">My Account</a></li>
-          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li><a class="dropdown-item" href="{% url 'users:profile' %}">Profil</a></li>
+          <li><a class="dropdown-item" href="{% url 'classroom:tentang' %}">Tentang</a></li>
           <li>
             <hr class="dropdown-divider">
           </li>
@@ -35,14 +35,14 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Siap untuk Logout?</h5>
               <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">x</span>
               </button>
             </div>
-            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-body">Pilih "Keluar" di bawah ini jika Anda siap untuk mengakhiri sesi Anda saat ini.</div>
             <div class="modal-footer">
-              <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+              <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Batal</button>
               <a class="btn btn-primary" href="{% url 'users:logout' %}">Logout</a>
             </div>
           </div>

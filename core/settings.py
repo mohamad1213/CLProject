@@ -10,6 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv() 
+
 from pathlib import Path
 import os 
 
@@ -21,7 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@d963vhv%0@yi4$dfd5qp8h55x$zevqwcxqhwd7fv+hh8-#xfe'
+
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -167,7 +174,7 @@ SUMMERNOTE_CONFIG = {
     ],
     'summernote': {
         'width': '100%',
-        'height': '300px',
+        'height': '100%',
     },
     'js': ('/static/js/summernote_footer.js',), 
     'css': ('/static/css/summernote_custom.css',), 
@@ -211,7 +218,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'hatami391998@gmail.com'
-EMAIL_HOST_PASSWORD = 'istimewajogja1234'
-
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 

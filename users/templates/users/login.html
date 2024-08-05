@@ -25,20 +25,20 @@
             <div class="col-lg-6">
               <div class="p-5">
                 <div class="text-center">
-                  <h1 class="h4 text-gray-900 mb-4">Welcome Back OpenClassroom!</h1>
-                  <small>Please Login to your account</small>
+                  <h1 class="h4 text-gray-900 mb-4">Selamat Datang OpenClassroom!</h1>
+                  <small>Silahkan masuk ke Akunmu</small>
                 </div>
                 <form method="POST" class="user">
                     {% csrf_token %}
                     {{ form | crispy }}
                   <div class="text-center pt-1 mb-5 pb-1">
-                    <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-0" type="submit">Login</button>
+                    <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-0" type="submit">Masuk</button>
                   <br>
-                    <a class="text-muted" href="{% url 'password_reset' %}">Forgot password?</a>
+                    <a class="text-muted" href="{% url 'password_reset' %}">Lupa Sandi?</a>
                   </div>
                   <div class="d-flex align-items-center justify-content-center pb-4">
-                      <p class="mb-0 me-2">Don't have an account?</p>
-                      <a  href="{% url 'users:register' %}" type="button" class="btn btn-outline-primary">Register</a>
+                      <p class="mb-0 me-2">Belum memiliki akun ?</p>
+                      <a  href="{% url 'users:register' %}" type="button" class="btn btn-outline-primary">Daftar</a>
                     </div>
                 </div>
             </form>

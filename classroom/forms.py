@@ -38,7 +38,7 @@ class AssignmentCreateForm(forms.ModelForm):
     description = forms.CharField(widget=SummernoteWidget())
     classrooms = forms.ChoiceField()
     topics = forms.ChoiceField()
-    points = forms.IntegerField(min_value=0,max_value =100)
+    points = forms.IntegerField(min_value=0,max_value =100, required=False)
     due_date = forms.DateTimeField()
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True})) 
 
@@ -47,9 +47,9 @@ class AssignmentCreateForm(forms.ModelForm):
     description = forms.CharField(widget=SummernoteWidget())
     classrooms = forms.ChoiceField()
     topics = forms.ChoiceField()
-    points = forms.IntegerField(min_value=0,max_value =100)
+    points = forms.IntegerField(min_value=0,max_value =100,required=False)
     due_date = forms.DateTimeField()
-    file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True})) 
+    file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}), required=False) 
 
     class Meta:
         model = Assignment

@@ -2,6 +2,7 @@
 {% block title %} Dashboard {% endblock title %}
 
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <header class="mb-3">
   <a href="#" class="burger-btn d-block d-xl-none">
     <i class="bi bi-justify fs-3"></i>
@@ -11,11 +12,11 @@
 <div class="page-heading">
   <h3>Ringkasan Statistik</h3>
 </div>
-{% if request.user.is_authenticated %}
-{% for u in request.user.groups.all %}
-{% if u.name == 'siswa' %}
 <div class="page-content">
   <section class="row">
+    {% if request.user.is_authenticated %}
+    {% for u in request.user.groups.all %}
+    {% if u.name == 'siswa' %}
     <div class="col-12">
       <div class="row">
         <div class="col-12 col-lg-3 col-md-6 mb-3">
@@ -94,17 +95,17 @@
               <h4>Aktifitas Diskusi</h4>
             </div>
             <div class="card-body">
-              <div id="chart-profile-visit"></div>
+              <div id="chart-monthly-activity"></div>
             </div>
           </div>
         </div>
         <div class="col-12 col-xl-4 mb-3">
           <div class="card">
             <div class="card-header">
-              <h4>Visitors Profile</h4>
+              <h4>Gender</h4>
             </div>
             <div class="card-body">
-              <div id="chart-visitors-profile"></div>
+              <div id="chart-gender"></div>
             </div>
           </div>
         </div>
@@ -117,18 +118,19 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-hover table-lg">
+                <table class="table table-hover table-lg" id="example2">
                   <thead>
                     <tr>
                       <th>Nama Guru</th>
                       <th>Kelas</th>
                       <th>Deskripsi</th>
                       <th>Tanggal</th>
-                      <th>Deadline</th>
+                      <th>Tenggat Waktu</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
                   </thead>
+                  {% if recent_task %}
                   {% for u in recent_task %}
                   <tbody>
                     <tr>
@@ -139,69 +141,59 @@
                       <td>{{ u.due_date|date:"d F Y, H:i" }}</td>
                       <td>
                         {% if u.status == 'completed' %}
-                        <span class="badge bg-success">Completed</span>
+                        <span class="badge bg-success">Selesai</span>
                         {% else %}
-                        <span class="badge bg-warning">On Progress</span>
+                        <span class="badge bg-warning">Sedang Dikerjakan</span>
                         {% endif %}
                       </td>
                       <td>
-                        <a href="{% url 'classroom:assignment_submit' u.pk %}" type="button"
-                          class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a href="{% url 'classroom:assignment_submit' u.pk %}" type="button" class="btn btn-primary"><i
+                            class="fa fa-eye" aria-hidden="true"></i></a>
                       </td>
                     </tr>
                   </tbody>
                   {% endfor %}
+                  {% else %}
+                  <h3>Tidak ada data </h3>
+                  {% endif %}
                 </table>
               </div>
             </div>
           </div>
         </div>
+
         <div class="col-12 col-xl-4 mb-3">
           <div class="card">
             <div class="card-header">
               <h4>Pengguna Terbaru</h4>
             </div>
             <div class="card-content">
+              {% for profile in user_profiles %}
               <div class="recent-message d-flex px-4 py-3">
                 <div class="avatar avatar-lg">
-                  <img src="./assets/compiled/jpg/4.jpg">
+                  {% if profile.gambar %}
+                  <img src="{{ profile.gambar }}" alt="{{ profile.nama }}'s Profile Image">
+                  {% else %}
+                  <span class="avatar avatar-lg">{{ profile.nama|slice:":1" }}</span>
+                  {% endif %}
                 </div>
                 <div class="name ms-4">
-                  <h5 class="mb-1">Hank Schrader</h5>
-                  <h6 class="text-muted mb-0">Staf</h6>
+                  <h5 class="mb-1">{{ profile.nama }}</h5>
+                  {% for classroom in profile.classrooms %}
+                  <small class=" mb-0 badge bg-primary fw-bolder">{{ classroom }}</small>
+                  {% endfor %}
                 </div>
               </div>
-              <div class="recent-message d-flex px-4 py-3">
-                <div class="avatar avatar-lg">
-                  <img src="./assets/compiled/jpg/5.jpg">
-                </div>
-                <div class="name ms-4">
-                  <h5 class="mb-1">Dean Winchester</h5>
-                  <h6 class="text-muted mb-0">Siswa</h6>
-                </div>
-              </div>
-              <div class="recent-message d-flex px-4 py-3">
-                <div class="avatar avatar-lg">
-                  <img src="./assets/compiled/jpg/4.jpg">
-                </div>
-                <div class="name ms-4">
-                  <h5 class="mb-1">Hank Schrader</h5>
-                  <h6 class="text-muted mb-0">Staf</h6>
-                </div>
-              </div>
-              <div class="px-4">
-                <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3">Lihat Semua</button>
-              </div>
+              {% endfor %}
+            </div>
+            <div class="px-4">
+              <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3">Lihat Semua</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
-</div>
-{% elif u.name == 'guru' %}
-<div class="page-content">
-  <section class="row">
+    {% elif u.name == 'guru' %}
     <div class="col-12 col-lg-12">
       <div class="row">
         <div class="col-12 col-lg-3 col-md-6 mb-3">
@@ -216,7 +208,7 @@
                 </div>
                 <div class="col-xxl-7 col-6">
                   <h6 class="text-muted font-semibold">Total siswa</h6>
-                  <h6 class="font-extrabold mb-0">112.000</h6>
+                  <h6 class="font-extrabold mb-0">{{total_student}}</h6>
                 </div>
               </div>
             </div>
@@ -281,17 +273,17 @@
               <h4>Aktifitas Diskusi</h4>
             </div>
             <div class="card-body">
-              <div id="chart-profile-visit"></div>
+              <div id="chart-monthly-activity"></div>
             </div>
           </div>
         </div>
         <div class="col-12 col-xl-4 mb-3">
           <div class="card">
             <div class="card-header">
-              <h4>Visitors Profile</h4>
+              <h4>Gender</h4>
             </div>
             <div class="card-body">
-              <div id="chart-visitors-profile"></div>
+              <div id="chart-gender"></div>
             </div>
           </div>
         </div>
@@ -300,7 +292,7 @@
         <div class="col-12 col-xl-8 mb-3">
           <div class="card">
             <div class="card-header">
-              <h4>Latest Comments</h4>
+              <h4>Komentar terbaru</h4>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -308,53 +300,34 @@
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Comment</th>
+                      <th>Komen</th>
+                      <th>Tanggal</th>
+                      <th>Classroom</th>
                     </tr>
                   </thead>
                   <tbody>
+                    {% for post in latest_posts %}
+                    {% for comment in post.comment_set.all %}
                     <tr>
                       <td class="col-3">
                         <div class="d-flex align-items-center">
                           <div class="avatar avatar-md">
-                            <img src="./assets/compiled/jpg/5.jpg">
+                            <img src="{{ comment.user.profile.image.url }}"
+                              alt="{{ comment.user.username }}'s Profile Image">
                           </div>
-                          <p class="font-bold ms-3 mb-0">Si Cantik</p>
+                          <p class="font-bold ms-3 mb-0">{{ comment.user.get_full_name }}</p>
                         </div>
                       </td>
                       <td class="col-auto">
-                        <p class=" mb-0">Congratulations on your graduation!</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="col-3">
-                        <div class="d-flex align-items-center">
-                          <div class="avatar avatar-md">
-                            <img src="./assets/compiled/jpg/2.jpg">
-                          </div>
-                          <p class="font-bold ms-3 mb-0">Si Ganteng</p>
-                        </div>
+                        <p class="mb-0">{{ comment.comment_text|safe }}</p>
                       </td>
                       <td class="col-auto">
-                        <p class=" mb-0">Wow amazing design! Can you make another
-                          tutorial for
-                          this design?</p>
+                        <p class="mb-0">{{ comment.created_at|date:"d F Y, H:i" }}</p>
                       </td>
+                      <td>{{ post.topic.classroom.name }}</td>
                     </tr>
-                    <tr>
-                      <td class="col-3">
-                        <div class="d-flex align-items-center">
-                          <div class="avatar avatar-md">
-                            <img src="./assets/compiled/jpg/2.jpg">
-                          </div>
-                          <p class="font-bold ms-3 mb-0">Si Ganteng</p>
-                        </div>
-                      </td>
-                      <td class="col-auto">
-                        <p class=" mb-0">Wow amazing design! Can you make another
-                          tutorial for
-                          this design?</p>
-                      </td>
-                    </tr>
+                    {% endfor %}
+                    {% endfor %}
                   </tbody>
                 </table>
               </div>
@@ -364,51 +337,187 @@
         <div class="col-12 col-xl-4 mb-3">
           <div class="card">
             <div class="card-header">
-              <h4>Recent Messages</h4>
+              <h4>Pesan Terbaru</h4>
             </div>
             <div class="card-content pb-4">
+              {% for comment in recent_comments_private %}
               <div class="recent-message d-flex px-4 py-3">
                 <div class="avatar avatar-lg">
-                  <img src="./assets/compiled/jpg/4.jpg">
+                  <img src="{{ comment.user.profile.image.url }}" alt="{{ comment.user.username }}'s Profile Image">
                 </div>
                 <div class="name ms-4">
-                  <h5 class="mb-1">Hank Schrader</h5>
-                  <h6 class="text-muted mb-0">@johnducky</h6>
+                  <h6 class="mb-1">{{ comment.user.get_full_name }}
+                    <small class="text-muted mb-0">{{ comment.created_at|date:"d F Y, H:i" }}</small>
+                  </h6>
+                  <h6 class="text-muted mb-0">{{ comment.assignment.topic.classroom.name }}</h6>
+                  <p class="mb-0">{{ comment.comment_text }}</p>
+                  <p class="text-muted mb-0"><a class="btn btn-primary mb-0" type="button"
+                      href="{% url 'classroom:assignment_submit' comment.assignment.id %}">Klik Link</a></p>
                 </div>
               </div>
+              {% empty %}
               <div class="recent-message d-flex px-4 py-3">
-                <div class="avatar avatar-lg">
-                  <img src="./assets/compiled/jpg/5.jpg">
-                </div>
-                <div class="name ms-4">
-                  <h5 class="mb-1">Dean Winchester</h5>
-                  <h6 class="text-muted mb-0">@imdean</h6>
-                </div>
+                <p>Tidak ada pesan terbaru .</p>
               </div>
-              <div class="recent-message d-flex px-4 py-3">
-                <div class="avatar avatar-lg">
-                  <img src="./assets/compiled/jpg/1.jpg">
-                </div>
-                <div class="name ms-4">
-                  <h5 class="mb-1">John Dodol</h5>
-                  <h6 class="text-muted mb-0">@dodoljohn</h6>
-                </div>
-              </div>
-              <div class="px-4">
-                <button class='btn btn-block btn-xl btn-outline-primary font-bold mt-3'>Start
-                  Conversation</button>
-              </div>
+              {% endfor %}
             </div>
           </div>
         </div>
       </div>
     </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
   </section>
 </div>
-{% endif %}
-{% endfor %}
-{% endif %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    fetch('/api/monthly-discussion-activity/')
+      .then(response => response.json())
+      .then(data => {
+        // Data yang diterima dari endpoint JSON
+        console.log(data);
 
+        // Mengambil nama-nama bulan dan jumlah aktivitas
+        const months = data.map(entry => entry.month);
+        const postsData = data.map(entry => entry.posts_count);
+        const commentsData = data.map(entry => entry.comments_count);
+
+        // Opsi untuk chart ApexCharts
+        const optionsMonthlyActivity = {
+          annotations: {
+            position: "back",
+          },
+          dataLabels: {
+            enabled: false,
+          },
+          chart: {
+            type: "bar",
+            height: 300,
+          },
+          fill: {
+            opacity: 1,
+          },
+          plotOptions: {},
+          series: [
+            {
+              name: "Posts",
+              data: postsData,
+            },
+            {
+              name: "Comments",
+              data: commentsData,
+            },
+          ],
+          colors: ["#435ebe", "#55c6e8"],
+          xaxis: {
+            categories: months,
+          },
+        };
+
+        // Inisialisasi chart ApexCharts
+        const chartMonthlyActivity = new ApexCharts(
+          document.querySelector("#chart-monthly-activity"),
+          optionsMonthlyActivity
+        );
+
+        // Render chart
+        chartMonthlyActivity.render();
+      })
+      .catch(error => console.error('Error fetching monthly discussion activity data:', error));
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    fetch('/api/discussion-activity/')
+      .then(response => response.json())
+      .then(data => {
+        var optionsProfileVisit = {
+          annotations: {
+            position: "back",
+          },
+          dataLabels: {
+            enabled: false,
+          },
+          chart: {
+            type: "bar",
+            height: 300,
+          },
+          fill: {
+            opacity: 1,
+          },
+          plotOptions: {},
+          series: [
+            {
+              name: "Posts",
+              data: data.posts_data,
+            },
+            {
+              name: "Comments",
+              data: data.comments_data,
+            },
+          ],
+          colors: ["#435ebe", "#55c6e8"],
+          xaxis: {
+            categories: data.months,
+          },
+        };
+
+        var chartProfileVisit = new ApexCharts(
+          document.querySelector("#chart-aktifitas1"),
+          optionsProfileVisit
+        );
+
+        chartProfileVisit.render();
+      })
+      .catch(error => console.error('Error fetching discussion activity data:', error));
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    fetch('/api/gender-data/')
+      .then(response => response.json())
+      .then(genderCounts => {
+        let optionsVisitorsProfile = {
+          series: [genderCounts['M'], genderCounts['F']],
+          labels: ["Laki-laki", "Perempuan"],
+          colors: ["#435ebe", "#55c6e8"],
+          chart: {
+            type: "donut",
+            width: "100%",
+            height: "350px",
+          },
+          legend: {
+            position: "bottom",
+          },
+          plotOptions: {
+            pie: {
+              donut: {
+                size: "30%",
+              },
+            },
+          },
+        };
+
+        var chartVisitorsProfile = new ApexCharts(
+          document.getElementById("chart-gender"),
+          optionsVisitorsProfile
+        );
+
+        chartVisitorsProfile.render();
+      })
+      .catch(error => console.error('Error fetching gender data:', error));
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $('#example2').DataTable({
+      "language": {
+        "emptyTable": "Tidak ada data yang tersedia di tabel"
+      }
+    });
+  });
+</script>
 {% endblock %}
 <style>
   /* Responsive styles */

@@ -21,72 +21,162 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <p class="text-subtitle text-muted">Kumpulan Tugas-tugas.</p>
+                    <p class="text-subtitle text-muted">Optimalisasi Penugasan dan Pelacakan Kinerja.</p>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Kelas</li>
+                            <li class="breadcrumb-item"><a href="/">Beranda</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Tugas</li>
                         </ol>
                     </nav>
                 </div>
             </div>
         </div>
-        <section class="section">
-            <div class="card">
-                <div class="card-body">
-                    <table class="table table-striped table-bordered" id="studentsTodo">
-                        <thead>
-                            <tr class="text-center">
-                                <th>No</th>
-                                <th>Judul</th>
-                                <th>Topic</th>
-                                <th>Tenggat Waktu</th>
-                                <th>Nilai</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        {% for u in assignments %}
-                        <tbody>
-                            <tr class="text-center">
-                                <td>{{forloop.counter}}</td>
-                                <!-- <td>{{ u.user.get_full_name }}</td> -->
-                                <td>{{ u.assignment.title }}</td>
-                                <td>{{ u.assignment.topic.classroom.name }}</td>
-                                <td>{{ u.assignment.due_date|date:"d F Y, H:i" }}</td>
-                                {% if u.grade %}
-                                <td><span class="badge bg-success">{{u.grade}}</span></td>
-                                {% else %}
-                                <td><span class="badge bg-warning">Belum dinilai</span></td>
-                                {% endif %}
-                                <td>
-                                    {% if u.status == 'completed' %}
-                                    <span class="badge bg-success">Completed</span>
-                                    {% else %}
-                                    <span class="badge bg-warning">On Progress</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <a href="{% url 'classroom:assignment_submit' u.assignment.pk %}" type="button"
-                                        class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                        {% endfor %}
-                    </table>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-xl-12 xl-100">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="nav border-tab nav-tabs" id="top-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="profile-top-tab" data-bs-toggle="tab" href="#mytask"
+                                        role="tab" aria-controls="top-profile" aria-selected="false">Tugasku</a>
+
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-top-tab" data-bs-toggle="tab" href="#archive"
+                                        role="tab" aria-controls="top-contact" aria-selected="false">Arsip</a>
+                                </li>
+                            </ul>
+                            <br>
+                            <div class="tab-content" id="top-tabContent">
+                                <div class="tab-pane fade show active m-t-30 m-t-sm-0" id="mytask" role="tabpanel"
+                                    aria-labelledby="profile-top-tab">
+                                    <div class="row">
+                                        <div class="card-header">
+                                            <h3>Daftar Tugas</h3>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class=" table-hover">
+                                                <table class="table table-striped table-bordered" id="studentsTodo">
+                                                    <thead class="light">
+                                                        <tr class="text-center light">
+                                                            <th>No</th>
+                                                            <th>Judul</th>
+                                                            <th>Topic</th>
+                                                            <th>Tenggat Waktu</th>
+                                                            <th>Nilai</th>
+                                                            <th>Status</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    {% for u in assignments %}
+                                                    <tbody>
+                                                        <tr class="text-center">
+                                                            <td>{{forloop.counter}}</td>
+                                                            <!-- <td>{{ u.user.get_full_name }}</td> -->
+                                                            <td>{{ u.title }}</td>
+                                                            <td>{{ u.topic.classroom.name }}</td>
+                                                            <td>{{ u.due_date|date:"d F Y, H:i" }}</td>
+                                                            {% if u.grade %}
+                                                            <td><span class="badge bg-success">{{u.grade}}</span></td>
+                                                            {% else %}
+                                                            <td><span class="badge bg-warning">Belum dinilai</span></td>
+                                                            {% endif %}
+                                                            <td>
+                                                                {% if u.status == 'completed' %}
+                                                                <span class="badge bg-success">Completed</span>
+                                                                {% else %}
+                                                                <span class="badge bg-warning">On Progress</span>
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>
+                                                                <a href="{% url 'classroom:assignment_submit' u.pk %}"
+                                                                    type="button" class="btn btn-primary"><i
+                                                                        class="fa fa-eye" aria-hidden="true"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade m-t-30 m-t-sm-0" id="archive" role="tabpanel"
+                                    aria-labelledby="contact-top-tab">
+                                    <div class="row">
+                                        <div class="card-header">
+                                            <h3>Tugas Selesai</h3>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="table-responsive table-hover">
+                                                <table class="table table-striped table-bordered" id="studentsTodo">
+                                                    <thead>
+                                                        <tr class="text-center white">
+                                                            <th>No</th>
+                                                            <th>Judul</th>
+                                                            <th>Topic</th>
+                                                            <th>Tenggat Waktu</th>
+                                                            <th>Nilai</th>
+                                                            <th>Status</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    {% for p in submitted_assignments %}
+                                                    <tbody>
+                                                        <tr class="text-center">
+                                                            <td>{{forloop.counter}}</td>
+                                                            <!-- <td>{{ p.user.get_full_name }}</td> -->
+                                                            <td>{{ p.assignment.title }}</td>
+                                                            <td>{{ p.assignment.topic.classroom.name }}</td>
+                                                            <td>{{ p.assignment.due_date|date:"d F Y, H:i" }}</td>
+                                                            {% if p.grade %}
+                                                            <td><span class="badge bg-success">{{p.grade}}</span></td>
+                                                            {% else %}
+                                                            <td><span class="badge bg-warning">Belum dinilai</span></td>
+                                                            {% endif %}
+                                                            <td>
+                                                                {% if p.status == 'completed' %}
+                                                                <span class="badge bg-success">Completed</span>
+                                                                {% else %}
+                                                                <span class="badge bg-warning">On Progress</span>
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>
+                                                                <a href="{% url 'classroom:assignment_submit' p.assignment.pk %}"
+                                                                    type="button" class="btn btn-primary"><i
+                                                                        class="fa fa-eye" aria-hidden="true"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<!-- Link CDN DataTables JS -->
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#studentsTodo').DataTable();
-    });
-</script>
-{% endblock content %}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Link CDN DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#studentsTodo').DataTable();
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#dtHorizontalExample').DataTable({
+                scrollX: true
+            });
+        });
+    </script>
+    {% endblock content %}

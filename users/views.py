@@ -15,10 +15,10 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                sweetify.success(request, f'Welcome {user.username}!', text='You have successfully logged in.', persistent='Close')
+                sweetify.success(request, f'Selamat Datang {user.username}!', text='Kamu telah berhasil Masuk.', persistent='Tutup')
                 return redirect('classroom:dashboard')  # Replace 'home' with your home view name
             else:
-                sweetify.error(request, 'Invalid username or password', persistent='Close')
+                sweetify.error(request, 'username atau sandi salah', persistent='Tutup')
     else:
         form = LoginForm()
     return render(request, 'users/login.html', {'form': form})
@@ -35,11 +35,12 @@ def register(request):
             else:
                 group = None  # Atau sesuaikan dengan logika bisnis Anda
             user.groups.add(group)
-            Profile.objects.create(user=user)
-            sweetify.success(request, f'Account Created Successfully for {user.username}')
+            gender = form.cleaned_data.get('gender')
+            Profile.objects.create(user=user, gender=gender)
+            sweetify.success(request, f'akun {user.username} berhasil dibuat')
             return redirect('users:login')
         else:
-            sweetify.error(request, f'Error Setting up the account')
+            sweetify.error(request, f'Kesalaham Pengaturan akun')
     else:
         form = UserRegistrationForm()
     return render(request, 'users/register.html', {'form':form})
@@ -58,10 +59,10 @@ def profile(request):
             if 'image' in request.FILES:
                 profile.image = request.FILES['image']
             profile.save()
-            sweetify.success(request, f"Profile Updated !")
+            sweetify.success(request, f"Profil telah diperbarui !")
             return redirect('users:profile')
         else:
-            sweetify.error(request, f'Profile Could not be Updated :(')
+            sweetify.error(request, f'Profil tidak dapat diperbarui :(')
 
             sweetify.error(request, profile_form.errors)
     else:
@@ -76,7 +77,7 @@ def profile(request):
 
 def logoutUser(request):
     logout(request)
-    sweetify.success(request, 'You have successfully logged out!', persistent='Close')
+    sweetify.success(request, 'Kamu Berhasil Keluar !', persistent='Tutup')
     return redirect('users:login')
 
 

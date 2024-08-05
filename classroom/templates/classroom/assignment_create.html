@@ -31,14 +31,13 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <p class="text-subtitle text-muted">A sortable, searchable, paginated table without
-                            dependencies thanks to simple-datatables.</p>
+                        <p class="text-subtitle text-muted">Optimalisasi Penugasan dan Pelacakan Kinerja.</p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Kelas</li>
+                                <li class="breadcrumb-item active" aria-current="page">Tambah Kelas</li>
                             </ol>
                         </nav>
                     </div>
@@ -48,9 +47,6 @@
                 <div class="row match-height">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Multiple Column</h4>
-                            </div>
                             <div class="card-content">
                                 <div class="card-body">
                                     <form action="{% url 'classroom:assignment_create' %}" method="POST"
@@ -60,12 +56,12 @@
                                         <div class="row m-3">
                                             <div class="col-lg-8">
                                                 <div class="form-group">
-                                                    <label for="title">Title</label>
+                                                    <label for="title">Judul</label>
                                                     {{ form.title|attr:"class:form-control" }}
                                                 </div>
                                                 <hr>
                                                 <div class="form-group">
-                                                    <label for="description">Description</label>
+                                                    <label for="description">Deksripsi</label>
                                                     {{ form.description}}
                                                 </div>
                                                 <div class="form-group">
@@ -76,25 +72,15 @@
                                             <div class="col-lg-4 vl v p-3 mt-sm-2">
                                                 <!-- For -->
                                                 <hr class='d-lg-none d-sm-block'>
-                                                <h5>For</h5>
+                                                <h5>Kelas</h5>
                                                 <div class="row">
                                                     <div class="col">
                                                         {{ form.classrooms|attr:"class:form-control" }}
                                                     </div>
                                                 </div>
                                                 <hr>
-
-                                                <!-- Points -->
-                                                <h5>Points</h5>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        {{ form.points|attr:"class:form-control" }}
-                                                    </div>
-                                                </div>
-                                                <hr>
-
                                                 <!-- Due -->
-                                                <h5>Due</h5>
+                                                <h5>Tenggat Waktu</h5>
                                                 <div class="row">
                                                     <div class="col">
                                                         {{form.due_date|attr:"class:form-control"|attr:"type:datetime-local"}}
@@ -103,7 +89,7 @@
                                                 <hr>
 
                                                 <!-- Topic -->
-                                                <h5>Topic</h5>
+                                                <h5>Topik</h5>
                                                 <div class="row">
                                                     <div class="col">
                                                         {{ form.topics|attr:"class:form-control" }}
@@ -115,8 +101,7 @@
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary">Save
-                                                changes</button>
+                                            <button type="submit" class="btn btn-primary">Simpan</button>
                                         </div>
                                     </form>
                                 </div>

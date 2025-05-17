@@ -142,7 +142,7 @@
                                         enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <div class="form-group">
-                                            {{post_form.description}}
+                                            {{post_form.description }}
                                         </div>
                                         <div class="form-group">
                                             {{ post_form.file_field|attr:"class:basic-filepond look" }}

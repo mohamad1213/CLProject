@@ -168,20 +168,23 @@ SUMMERNOTE_THEME = 'bs4'  # Show summernote with Bootstrap4
 #     },
 # }
 SUMMERNOTE_CONFIG = {
+    'iframe': False,  # Set to False if you want to manage the height via the main editor.
+    'width': '100%',
+    'height': '400px',  # Set the default height here
     'toolbar': [
         ['style', ['bold', 'italic', 'underline', 'clear']],
         ['para', ['ul']],
     ],
     'summernote': {
         'width': '100%',
-        'height': '100%',
+        'height': '400px',
     },
     'js': ('/static/js/summernote_footer.js',), 
     'css': ('/static/css/summernote_custom.css',), 
 }
 
 
-KEDITOR_FILENAME_GENERATOR = 'utils.get_filename'
+CKEDITOR_FILENAME_GENERATOR = 'utils.get_filename'
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_CONFIGS = {

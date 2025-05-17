@@ -16,6 +16,7 @@
                         background: url("{% static 'mainapp/img/logo.png' %}");
                         background-position: center;
                         background-size: cover;
+                        height: 700px;
                         -webkit-transform: rotate(90deg);
                         -moz-transform: rotate(90deg);
                         -ms-transform: rotate(90deg);
@@ -29,7 +30,7 @@
                     <div class="text-center">
                         <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                     </div>
-                    <form class="user" method='POST'>
+                    <form method="post">
                         {% csrf_token %}
                         {{ form | crispy }}
                         <div class="form-group">

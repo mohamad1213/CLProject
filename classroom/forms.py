@@ -17,6 +17,7 @@ class JoinClassroomForm(forms.Form):
     code = forms.CharField(label='Enter Code', max_length=100)
 
 class PostForm(forms.Form):
+    # description = forms.CharField(widget=SummernoteWidget(attrs={'style': 'width: 100%; height: 300px;'}))
     description = forms.CharField(widget=SummernoteWidget())
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'allow_multiple_selected': True}))
 

@@ -61,7 +61,7 @@
                                     <td>{{ u.topic }}</td>
                                     <td>{{ u.due_date|date:"d F Y, H:i" }}</td>
                                     <td>
-                                        {% if u.status == 'completed' %}
+                                        {% if u.submitted_assignments.status == 'completed' %}
                                         <span class="badge bg-success">Selesai</span>
                                         {% else %}
                                         <span class="badge bg-warning">Sedang proses</span>

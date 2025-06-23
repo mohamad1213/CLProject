@@ -139,7 +139,6 @@ def dashboard(request):
     classrooms_with_user_count = Classroom.objects.annotate(total_users=Count('users'))
     group_siswa_classrooms = classrooms_with_user_count.filter(users__groups__name='siswa').distinct().count()
 
-    # Dictionary untuk menyimpan profil user dan classrooms mereka
     siswa_group = Group.objects.get(name='siswa')
     latest_users = User.objects.filter(groups=siswa_group).order_by('-date_joined')[:10]
 

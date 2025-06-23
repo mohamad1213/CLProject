@@ -5,13 +5,13 @@
 This is an attempt to clone the best features of google classroom and educative.io using django.
 
 ## Screenshots 
-<img src="screenshots/home.PNG" width="400"/><img src="screenshots/features.PNG" width="400"/> 
-<img src="screenshots/classrooms.PNG" width="400"/> <img src="screenshots/classroom.PNG" width="400"/> 
-<img src="screenshots/newsletterandcontacts.PNG" width="400"/> <img src="screenshots/userlogin.PNG" width="400"/> 
-<img src="screenshots/userregister.PNG" width="400"/> <img src="screenshots/view_assignment.PNG" width="400"/>
-<img src="screenshots/whiteboard.PNG" width="400"/> <img src="screenshots/liveboard.PNG" width="400"/> 
-<img src="screenshots/courses.PNG" width="400"/> <img src="screenshots/ide.PNG" width="400"/> 
-<img src="screenshots/cpboard.PNG" width="400"/> <img src="screenshots/admin.PNG" width="400"/>
+
+
+<img src="screenshoot/dashboard_siswa.png" width="400"/><img src="screenshoot/forum.png" width="400"/> 
+<img src="screenshoot/detailtugas.png" width="400"/> <img src="screenshoot/login.png" width="400"/> 
+<img src="screenshoot/profil.png" width="400"/> <img src="screenshoot/Tambahtugas.png" width="400"/> 
+<img src="screenshoot/userregister.PNG" width="400"/> <img src="screenshoot/detailtugas_siswa/png" width="400"/>
+<img src="screenshoot/registrasi.png" width="400"/> <img src="screenshoot/liveboard.PNG" width="400"/> 
 
 
 ## Features Included 
@@ -35,7 +35,7 @@ This is an attempt to clone the best features of google classroom and educative.
 
 **1. Clone Repository & Install Packages**
 ```sh
-git clone https://github.com/mishrakeshav/Open-Classroom.git
+git clone https://github.com/mohamad1213/CLProject
 pip install -r requirements.txt
 ```
 **2. Setup Environment**
@@ -55,9 +55,3 @@ python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```
-
-## Contributors 
-<a href="https://github.com/mishrakeshav">Keshav Mishra</a><br>
-<a href="https://github.com/Phoenix009">Jaideep More</a><br>
-<a href="https://github.com/aneeshKM">Aneesh Mokashi</a><br>
-<a href="https://github.com/MHardik29">Hardik Mandaliya</a>

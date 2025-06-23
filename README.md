@@ -7,11 +7,14 @@ This is an attempt to clone the best features of google classroom and educative.
 ## Screenshots 
 
 
-<img src="screenshoot/dashboard_siswa.png" width="400"/><img src="screenshoot/forum.png" width="400"/> 
-<img src="screenshoot/detailtugas.png" width="400"/> <img src="screenshoot/login.png" width="400"/> 
-<img src="screenshoot/profil.png" width="400"/> <img src="screenshoot/Tambahtugas.png" width="400"/> 
-<img src="screenshoot/userregister.PNG" width="400"/> <img src="screenshoot/detailtugas_siswa/png" width="400"/>
-<img src="screenshoot/registrasi.png" width="400"/> <img src="screenshoot/liveboard.PNG" width="400"/> 
+<img src="screenshoot/dashboard_siswa.png" width="400"/>
+<img src="screenshoot/forum.png" width="400"/> 
+<img src="screenshoot/detailtugas.png" width="400"/>
+<img src="screenshoot/login.png" width="400"/> 
+<img src="screenshoot/profil.png" width="400"/>
+<img src="screenshoot/Tambahtugas.png" width="400"/> 
+<img src="screenshoot/detailtugas_siswa/png" width="400"/>
+<img src="screenshoot/registrasi.png" width="400"/> 
 
 
 ## Features Included 
